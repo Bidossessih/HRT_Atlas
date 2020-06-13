@@ -1,0 +1,2 @@
+tagList(tags$title("Human cell selective reference genes"), 
+        tags$meta(name="Description", content="Most stable human tissue selective housekeeping genes and primers to normalize qPCR expression."))

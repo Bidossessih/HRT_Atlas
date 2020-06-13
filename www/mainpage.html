@@ -1,0 +1,49 @@
+<nav class="navbar navbar-expand-md navbarStyle navbar-light" style="width:100%;">
+  <a class="navbar-brand logoviz" href="?homePageGlobal">
+    <img src="LogoHKNav.png" alt="Logo" class="d-inline-block align-center logowidth"> <span style="text-align:center; font-weight: bold">Housekeeping Transcript Atlas</span>
+  </a>
+  
+  <button class="navbar-toggler hidden-md-up float-md-right" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse navbar-toggleable-sm navbarcustom" id="collapsibleNavbar">
+    <ul class="nav navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link"  href="?homePageGlobal">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link"  href="?about">About</a>
+      </li>
+      
+      <li class="nav-item">
+        <a class="nav-link"  href="?download" onclick="ga('send', 'event', 'Menu', 'access', 'Download');">Downloads</a>
+      </li>
+
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle"  href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Gene expression 
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item" href="?visualization" style="text-align:justify" onclick="ga('send', 'event', 'Menu', 'access', 'Visualize Human');">Human housekeeping genes expression <br> in different tissues</a>
+          <a class="dropdown-item" href="?visualizationMouse" style="text-align:justify" onclick="ga('send', 'event', 'Menu', 'access', 'Visualize Mouse');">Mouse housekeeping genes expression <br> in different tissues</a>
+          
+        </div>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link"  href="?modifiers" onclick="ga('send', 'event', 'Menu', 'access', 'Modifiers');">Expression Modifiers</a>
+      </li>
+          
+    </ul>
+  </div>  
+</nav>
+
+<!--Show dropdown menu on hover-->
+<script>
+  $('ul.nav li.dropdown').hover(function() {
+    $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeIn(500);
+  }, function() {
+    $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeOut(500);
+});
+
+</script>

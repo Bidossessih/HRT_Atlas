@@ -1,0 +1,422 @@
+/*
+ * Common styling across every page.
+ */
+/* https://color.adobe.com/21-Flat-Business-Icons-color-theme-6339907/?showPublished=true
+ * https://color.adobe.com/Aspirin-C-color-theme-251864/?showPublished=true
+ * https://color.adobe.com/Ventana-Azul-color-theme-2159606/?showPublished=true
+ */
+/* Logo colors */
+/* The logo color is 36B1BF; this is slightly too light for text. */
+/* Structure all pages to allow for footer. Other styling for these elements is
+ * below.
+ * ------------------------------------------------------------------------- */
+html {
+  position: relative;
+  min-height: vh;
+}
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+.footer {
+  height: 210px;
+  width: 100%;
+}
+.wrapper {
+  padding-bottom: 20px;
+  flex: 1 0 auto;
+}
+/* Tag selectors.
+ * ------------------------------------------------------------------------- */
+html {
+  font-family: Arial, sans-serif;
+}
+a,
+a:link {
+  color: #1a0dab;
+  text-decoration: none;
+}
+a:hover {
+  color: #1a0dab;
+  text-decoration: underline;
+}
+a:visited,
+a:active {
+  text-decoration: none;
+}
+a.btn {
+  color: black;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+h1,
+h2,
+h3 {
+  border-bottom: 1px solid #aaa;
+  font-weight: 300;
+}
+h4,
+h5,
+h6 {
+  font-weight: 500;
+}
+input {
+  width: 100%;
+}
+ul {
+  list-style-type: square;
+  padding-left: 15px;
+}
+table ul,
+table ol {
+  margin-bottom: 0;
+}
+strong {
+  font-weight: bold;
+}
+select {
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  background-position: right 50% !important;
+  background-repeat: no-repeat !important;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAMCAYAAABSgIzaAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NDZFNDEwNjlGNzFEMTFFMkJEQ0VDRTM1N0RCMzMyMkIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NDZFNDEwNkFGNzFEMTFFMkJEQ0VDRTM1N0RCMzMyMkIiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo0NkU0MTA2N0Y3MUQxMUUyQkRDRUNFMzU3REIzMzIyQiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo0NkU0MTA2OEY3MUQxMUUyQkRDRUNFMzU3REIzMzIyQiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PuGsgwQAAAA5SURBVHjaYvz//z8DOYCJgUxAf42MQIzTk0D/M+KzkRGPoQSdykiKJrBGpOhgJFYTWNEIiEeAAAMAzNENEOH+do8AAAAASUVORK5CYII=) !important;
+  padding: .5em !important;
+  padding-right: 1.5em !important;
+  border-radius: 0 !important;
+  line-height: inherit !important;
+}
+/* Generic classes
+ * ------------------------------------------------------------------------- */
+.clear {
+  clear: both;
+}
+.note {
+  font-size: 14px;
+  font-style: italic;
+  font-weight: 500;
+}
+.note.dataset {
+  color: #309fab;
+}
+.note.gene {
+  color: #ED8C2B;
+}
+.note.gene-set {
+  color: #EC1E8E;
+}
+.glyphicon-search {
+  cursor: pointer;
+}
+.instruction {
+  font-style: italic;
+}
+.cursor-pointer {
+  cursor: pointer;
+}
+.top-buffer {
+  margin-top: 20px;
+}
+.bottom-buffer {
+  margin-bottom: 20px;
+}
+.initial:first-letter {
+  text-transform: uppercase;
+}
+.capitalize {
+  text-transform: capitalize;
+}
+.underline {
+  text-decoration: underline !important;
+}
+/* Show once DataTables is ready. */
+.data-table {
+  display: none;
+}
+.no-padding {
+  padding: 0;
+}
+/* Section selectors.
+ * ------------------------------------------------------------------------- */
+#navbar-wrapper {
+  background-color: #343844;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+  height: 50px;
+  padding: 10px;
+  /* Important! Otherwise the dropdown menu doesn't work!
+     * See: http://stackoverflow.com/a/16156332/1830334
+     */
+  position: relative;
+}
+#navbar-wrapper h1 {
+  border: none;
+  font-size: 25px;
+  margin-bottom: 4px;
+  margin-top: 0;
+}
+#navbar-wrapper h1 span.credits {
+  font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: 300;
+  font-size: 14px;
+  margin-left: 10px;
+}
+#navbar-wrapper h1 a:hover {
+  text-decoration: none;
+}
+#navbar-wrapper .nav > li > a:focus,
+#navbar-wrapper .nav > li > a:hover,
+#navbar-wrapper .nav .open > a,
+#navbar-wrapper .nav .open > a:active,
+#navbar-wrapper .nav .open > a:focus,
+#navbar-wrapper .nav .open > a:hover {
+  background-color: #343844;
+}
+#navbar-wrapper .dropdown-menu {
+  background-color: #343844;
+  border-radius: 0;
+  border: none;
+  top: 30px;
+}
+#navbar-wrapper #menu {
+  background-color: #343844;
+  margin-bottom: 20px;
+  position: relative;
+  /* Line up with title text */
+  top: 7px;
+  text-transform: uppercase;
+}
+#navbar-wrapper .nav li {
+  padding: 0;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+#navbar-wrapper .nav li:hover,
+#navbar-wrapper .nav li:focus,
+#navbar-wrapper .nav li:active {
+  background-color: #343844;
+}
+#navbar-wrapper .nav a:hover,
+#navbar-wrapper .nav a:focus {
+  color: white;
+  opacity: .7;
+  transition: box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), background-color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), -webkit-transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition: box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), background-color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+#navbar-wrapper img {
+  bottom: 2px;
+  position: relative;
+  margin-right: 14px;
+}
+#navbar-wrapper a {
+  color: white;
+  font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: 300;
+}
+#navbar-wrapper a:hover,
+#navbar-wrapper a:active {
+  background-color: #343844;
+}
+#navbar-wrapper .navbar-nav.list-inline a {
+  padding: 0 1px;
+}
+#navbar-wrapper .navbar-toggle {
+  padding: 0;
+}
+#navbar-wrapper .navbar-toggle span {
+  background-color: white;
+}
+#navbar-wrapper .search {
+  bottom: 6px;
+  float: left;
+  left: 20px;
+  position: relative;
+  width: 25%;
+  top: -2px;
+}
+@media (max-width: 1200px) {
+  #navbar-wrapper h1 .credits {
+    display: none;
+  }
+}
+@media (max-width: 1000px) {
+  #navbar-wrapper h1 .project-title {
+    display: none;
+  }
+  #navbar-wrapper ul li.search-item {
+    display: none;
+  }
+}
+@media (max-width: 768px) {
+  #navbar-wrapper #menu {
+    width: 100%;
+  }
+  #navbar-wrapper #menu a {
+    padding: 2px 5px;
+  }
+  #navbar-wrapper #menu a:hover,
+  #navbar-wrapper #menu afocus {
+    background-color: #61697F;
+  }
+  #navbar-wrapper #menu li {
+    padding: 5px 10px;
+  }
+  #navbar-wrapper .search-bar .entity-dropdown {
+    display: none;
+  }
+  #navbar-wrapper ul {
+    top: 0;
+  }
+}
+.search-bar.on-index-page {
+  margin: 0 auto;
+  width: 600px;
+}
+.search-bar.in-navbar {
+  float: left;
+  margin: 0 0 0 10px;
+  position: relative;
+  bottom: 2px;
+}
+.search-bar form {
+  width: 100%;
+  display: inline-block;
+}
+.search-bar .input-bar {
+  overflow: hidden;
+}
+.search-bar .input-bar input {
+  /* Remove double border from Bootstrap form-controls. */
+  border-left: none;
+  border-right: none;
+  width: 100%;
+}
+.search-bar .entity-dropdown {
+  float: left;
+}
+.search-bar .entity-dropdown.gene {
+  border: 1px solid #ED8C2B;
+  width: 80px;
+}
+.search-bar .entity-dropdown.geneSet {
+  border: 1px solid #EC1E8E;
+  width: 105px;
+}
+.search-bar .entity-dropdown.dataset {
+  border: 1px solid #309fab;
+  width: 95px;
+}
+.search-bar .entity-dropdown.all {
+  /* Don't use a variable for CCC. This is explicitly matching Bootstrap. */
+  border: 1px solid #ccc;
+  width: 55px;
+}
+.search-bar .submit-button {
+  float: right;
+  background: lightblue;
+  width: 40px;
+}
+@media (max-width: 768px) {
+  .search-bar.on-index-page {
+    width: 100%;
+  }
+}
+@media (max-width: 375px) {
+  .search-bar.in-navbar .input-bar {
+    width: 120px;
+  }
+}
+.footer {
+  background: #eee;
+  color: #444;
+  padding: 13px;
+  width: 100%;
+}
+.footer ul {
+  list-style-type: none;
+  padding: 0;
+}
+.footer a {
+  color: #444;
+  font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: 300;
+}
+.footer p {
+  font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+.footer h6 {
+  border-bottom: none;
+  font-weight: bold;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+.footer .pull-left {
+  width: 80%;
+}
+.footer .pull-left #contact .left-border {
+  border-left: 1px solid #aaa;
+  padding-left: 8px;
+}
+.footer #share a {
+  float: right;
+}
+.footer #share img {
+  padding-left: 5px;
+  width: 30px;
+}
+.footer #share img:hover {
+  opacity: 0.7;
+}
+@media (max-width: 665px) {
+  .hide-on-mobile {
+    display: none;
+  }
+  .footer .pull-left {
+    width: 100%;
+  }
+}
+/* This break point is when the publication citation text-wraps, causing the 
+ * footer to need to be longer.
+ */
+@media (max-width: 990px) {
+  .footer {
+    height: 240px;
+  }
+}
+.project-title {
+  font-family: Georgia, sans-serif;
+}
+/* Loading screen
+ * ------------------------------------------------------------------------- */
+.loader-container {
+  background-color: rgba(255, 255, 255, 0.75);
+  cursor: wait;
+  height: 100%;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 9999;
+}
+.loader-container .loader-modal {
+  background-color: #fffac7;
+  border: 1px solid #fff169;
+  color: #444;
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+  font-weight: bold;
+  padding: 5px;
+  margin: 0 auto;
+  position: absolute;
+  left: 0;
+  text-align: center;
+  right: 0;
+  top: 40%;
+  width: 150px;
+}
+/*# sourceMappingURL=common.css.map */

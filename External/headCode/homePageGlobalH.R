@@ -1,0 +1,2 @@
+tagList(tags$title("HT Atlas: Housekeeping genes"), tags$meta(name="Description", content="Human and mouse housekeeping genes for qPCR normalization.
+                  Suitable tissue specific reference genes and efficient primers."))
