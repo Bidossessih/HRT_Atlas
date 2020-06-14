@@ -34,7 +34,7 @@ includeHTML("External/HTML/homePageHuman.html"),
                                         
                                         #verbatimTextOutput("outxId", placeholder = FALSE),
                                         
-                                        div(id="sel1", style="width: 100%;", uiOutput("selectUI")),
+                                        hidden(div(id="sel1", style="width: 100%;", uiOutput("selectUI"))),
                                         
                                         div(id="sel2", style="width: 100%;", uiOutput('validatedPrimerSelectInput'))
                                         
@@ -45,7 +45,7 @@ includeHTML("External/HTML/homePageHuman.html"),
                                       div(class="col-sm-9",
                           
                           
-                          tabsetPanel(
+                          tabsetPanel(id="tabsetID",
                               tabPanel(id="ref", "Reference Transcripts", DT::DTOutput("tabHK")),#)#,
                               tabPanel(id="rmodifiers", "Expression Modifiers", br(),
                                        span(style="text-align:justify", "HRT Atlas v1.0 is integrated with", HTML("<a href='http://amp.pharm.mssm.edu/Harmonizome/' target='_blank'>Harmonizome</a>"), "database.", br(),
@@ -100,33 +100,30 @@ includeHTML("External/HTML/footer.html")
 
 
 ################################## Server code
-observeEvent(input$rmodifiers, {
-  shinyjs::show("sel1")
 
+# Show selectInput on click
+observeEvent(input$tabsetID, {
+  if (input$tabsetID=="Validation"){
+    
+   shinyjs::show("sel2")
+  } else {
+  shinyjs::hide("sel2")
+}
 })
 
-observeEvent(input$epi, {
-  shinyjs::show("sel1")
+
+# Show selectInput on click
+
+observeEvent(input$tabsetID, {
+  if (input$tabsetID=="Regulatory Elements" || input$tabsetID=="Expression Modifiers"){
+    
+    shinyjs::show("sel1")
+  } else {
+    shinyjs::hide("sel1")
+  }
   
 })
 
-observeEvent(input$refPrimer, {
-  shinyjs::show("sel2")
-  
-})
-
-  observeEvent(input$Validation, {
-    shinyjs::show("sel2")
-    alert(date())
-  
-})
-
-
- shinyjs::click("idown1", asis = FALSE)
- shinyjs::click("idown2", asis = FALSE)
- 
- onclick("idown1", alert(date()))
- shinyjs::onclick("valPrimer", alert(date()))
 
 ###################################
 
@@ -281,7 +278,7 @@ output$tabHK <- DT::renderDT({
                     )), language = list(search = 'Filter:'),
                   orderClasses = F,
                   scrollX = TRUE,
-                  #pageLength = 5, lengthMenu = c(5, 10, 15, 20, nrow(hk)),
+                  pageLength = 5, lengthMenu = c(5, nrow(hk)),
                   colReorder = TRUE,
                   initComplete = JS(
                     "function(settings, json) {",
@@ -360,7 +357,7 @@ output$tabRef <- DT::renderDT({
                      
                   orderClasses = TRUE,
                   scrollX = TRUE,
-                  #pageLength = nrow(dPrimer),
+                  pageLength = 5, lengthMenu = c(5, nrow(dPrimer)),
                   colReorder = TRUE,
                   initComplete = JS(
                     "function(settings, json) {",
@@ -376,7 +373,7 @@ refPop <-HTML('<a  data-toggle="tooltip" title="Suitable reference transcripts f
 
 
 
-onevent("mousehover", "essai", shinyjs::alert("Type 'name' or '2' to see the features. "))
+#onevent("mousehover", "essai", shinyjs::alert("Type 'name' or '2' to see the features. "))
 
 
 
@@ -444,7 +441,7 @@ output$Mod1 <- DT::renderDT({
                     ),
                   orderClasses = F,
                   scrollX = TRUE,
-                  pageLength = 5, lengthMenu = c(5, 10, 15, 20, nrow(dataHarmonizome)),
+                  pageLength = 5, lengthMenu = c(5, nrow(dataHarmonizome)),
                   colReorder = TRUE,
                   initComplete = JS(
                     "function(settings, json) {",
@@ -521,7 +518,7 @@ output$Mod2 <- DT::renderDT({
                     ),
                   orderClasses = F,
                   scrollX = TRUE,
-                  pageLength = 5, lengthMenu = c(5, 10, 15, 20, nrow(dataHarmonizome2)),
+                  pageLength = 5, lengthMenu = c(5, nrow(dataHarmonizome2)),
                   colReorder = TRUE,
                   initComplete = JS(
                     "function(settings, json) {",
@@ -600,7 +597,7 @@ output$Mod3 <- DT::renderDT({
                     ),
                   orderClasses = F,
                   scrollX = TRUE,
-                  pageLength = 5, lengthMenu = c(5, 10, 15, 20, nrow(dataHarmonizome2)),
+                  pageLength = 5, lengthMenu = c(5, nrow(dataHarmonizome2)),
                   colReorder = TRUE,
                   initComplete = JS(
                     "function(settings, json) {",
@@ -643,7 +640,7 @@ output$validatedPrimerSelectInput = renderUI({
 
 
 ####output$outxId####
-output$outxId <- renderPrint(input$rmodifiers.Validation)
+output$outxId <- renderPrint(input$tabsetID)
 #######################################GeneName######################################################
 output$genenameVal <- renderUI({
   
