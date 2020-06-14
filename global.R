@@ -14,9 +14,9 @@ library(dplyr)
 library(ggplot2)
 library(RSQLite)
 
-con <- dbConnect(RSQLite::SQLite(), "/home/ubuntupc/Área de Trabalho/Docker/db/Housekeeping_human_mouse.sqlite")
+con <- dbConnect(RSQLite::SQLite(), "~/Repository/Housekeeping and Reference Transcript Atlas/db/Housekeeping_human_mouse_HRTatlas_version.sqlite")
 
-#con <- dbConnect(RSQLite::SQLite(), "/srv/shiny-server/housekeepingAtlas/db/Housekeeping_human_mouse.sqlite")
+#con <- dbConnect(RSQLite::SQLite(), "/srv/shiny-server/housekeepingAtlas/db/Housekeeping_human_mouse_HRTatlas_version.sqlite")
 
 
 

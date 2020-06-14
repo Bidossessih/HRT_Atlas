@@ -27,13 +27,14 @@ includeHTML("External/HTML/homePageHuman.html"),
                                         radioButtons("mfc", "Scale of RPKM:",
                                                      c("Logarithmic" = "log",
                                                        "Linear" = "linear")), br(), hr(), br(), 
-                                        sliderInput("rpkm", "Minimum of RPKM:",
-                                                    min = 5, max = 30, value = 30
+                                        sliderInput("rpkm", "Average of RPKM:",
+                                                    min = 1, max = 30, value = 30
                                         ), br(), hr(),
                                         
-                                        verbatimTextOutput("outxId", placeholder = FALSE),
                                         
-                                        shinyjs::hide(div(id="sel1", style="width: 100%;", uiOutput("selectUI"))),
+                                        #verbatimTextOutput("outxId", placeholder = FALSE),
+                                        
+                                        div(id="sel1", style="width: 100%;", uiOutput("selectUI")),
                                         
                                         div(id="sel2", style="width: 100%;", uiOutput('validatedPrimerSelectInput'))
                                         
@@ -46,8 +47,8 @@ includeHTML("External/HTML/homePageHuman.html"),
                           
                           tabsetPanel(
                               tabPanel(id="ref", "Reference Transcripts", DT::DTOutput("tabHK")),#)#,
-                              tabPanel(id="rmodifiers", "Expression Modifiers",
-                                       span(style="text-align:justify", "HT Atlas v1.0 is integrated with", HTML("<a href='http://amp.pharm.mssm.edu/Harmonizome/' target='_blank'>Harmonizome</a>"), "database.", br(),
+                              tabPanel(id="rmodifiers", "Expression Modifiers", br(),
+                                       span(style="text-align:justify", "HRT Atlas v1.0 is integrated with", HTML("<a href='http://amp.pharm.mssm.edu/Harmonizome/' target='_blank'>Harmonizome</a>"), "database.", br(),
                                             strong(textOutput("genenameChoice"))), br(),
                                        
                                        withSpinner(DT::DTOutput("Mod1")),br(),
@@ -55,8 +56,8 @@ includeHTML("External/HTML/homePageHuman.html"),
                                        withSpinner(DT::DTOutput("Mod3"))),
                               
                               #########Epiregio
-                              tabPanel(id="epi", "Regulatory Elements",
-                                       span(style="text-align:justify", "HT Atlas v1.0 is integrated with", HTML("<a href='http://amp.pharm.mssm.edu/Harmonizome/' target='_blank'>Epiregio server</a>"), "via REST API.", br()
+                              tabPanel(id="epi", "Regulatory Elements", br(),
+                                       span(style="text-align:justify", "HRT Atlas v1.0 is integrated with", HTML("<a href='http://amp.pharm.mssm.edu/Harmonizome/' target='_blank'>Epiregio server</a>"), "via REST API.", br()
                                            ), br()
                                      
                                        ),
@@ -143,6 +144,7 @@ observeEvent(input$button, {
 observeEvent(input$previousSearch, {
   shinyjs::show("homehuman")
   shinyjs::hide("tabpanelUI")
+  reset("search")
   
   
 })
@@ -763,7 +765,7 @@ output$imageVal = renderUI({
               
 </div>
             
-            <div id="meltValId" class="col-11 html-widget-output shiny-bound-output">
+            <div id="meltValId" class="col-11 html-widget-output shiny-bound-output" style="margin-top:50px;">
             
             
             <a data-toggle="tooltip" title="Click to download a representative melting curve" href="Validation/Melt_Human_', outGeneForImg(), '.JPG" target="_blank">
