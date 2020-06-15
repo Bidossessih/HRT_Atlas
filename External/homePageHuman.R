@@ -4,7 +4,8 @@ useShinyjs(),
 includeHTML("External/HTML/homePageHuman.html"),
 
 
-                  hidden(div(id="tabpanelUI", class="container", style="min-height: 300px;",
+                hidden(div(style="width:100%", id="tabpanelUI",
+                    div( class="container", style="min-height: 300px;",
                              
                              div(class="row",
                                  
@@ -32,9 +33,9 @@ includeHTML("External/HTML/homePageHuman.html"),
                                         ), br(), hr(),
                                         
                                         
-                                        #verbatimTextOutput("outxId", placeholder = FALSE),
+                                        verbatimTextOutput("outxId", placeholder = FALSE),
                                         
-                                        hidden(div(id="sel1", style="width: 100%;", uiOutput("selectUI"))),
+                                        div(id="sel1", style="width: 100%;", uiOutput("selectUI")),
                                         
                                         div(id="sel2", style="width: 100%;", uiOutput('validatedPrimerSelectInput'))
                                         
@@ -58,7 +59,9 @@ includeHTML("External/HTML/homePageHuman.html"),
                               #########Epiregio
                               tabPanel(id="epi", "Regulatory Elements", br(),
                                        span(style="text-align:justify", "HRT Atlas v1.0 is integrated with", HTML("<a href='http://amp.pharm.mssm.edu/Harmonizome/' target='_blank'>Epiregio server</a>"), "via REST API.", br()
-                                           ), br()
+                                           ), br(),
+                                       withSpinner(DT::DTOutput("epiregio1")),br(),br(),
+                                       withSpinner(DT::DTOutput("epiregio2"))
                                      
                                        ),
                               
@@ -83,8 +86,8 @@ includeHTML("External/HTML/homePageHuman.html"),
                         
                          ) #End sidebarlayout
                         )
-                        )#End hidden
-                        
+                          )#End hidden
+                )#End wrapper of hideen
                   ),# wrapper
 
 includeHTML("External/HTML/footer.html")
@@ -640,7 +643,7 @@ output$validatedPrimerSelectInput = renderUI({
 
 
 ####output$outxId####
-output$outxId <- renderPrint(input$tabsetID)
+output$outxId <- renderPrint(input$search)
 #######################################GeneName######################################################
 output$genenameVal <- renderUI({
   
@@ -793,55 +796,62 @@ output$imageVal = renderUI({
 
 ################ Epiregio #####################
 
-output$epiregio <- DT::renderDT({ 
+outGeneForEpiregio <- reactive({
   
-  ensemblPop <-'<a  data-toggle="tooltip" title="Transcript identification according to Ensembl database."> Ensembl ID<img src="info.png" style="width: 10px;"></a>'
+  gene <- as.character(HK_geneAtualizadoRef[which(HK_geneAtualizadoRef$Ensembl %in% gsub("^[A-z0-9_]+[:(:]","" , gsub("[:):]$", "", gsub(" ","" , gsub("-", "_", input$selectHSGenes))))), 2])# Extract gene symbol
   
-  sdPop <-'<a  data-toggle="tooltip" title="Variation estimated as standard deviation of log2 of Read Per Kilobase Million."> Std Deviation <img src="info.png" style="width: 10px;"></a>'
+  return(gene)
+})
+
+##### Data epiregio
+dataEpiregio <- reactive({
   
-  #colnames(hk)[2] <- ensemblPop
+  gene <- as.character(HK_geneAtualizadoRef[which(HK_geneAtualizadoRef$Ensembl %in% gsub("^[A-z0-9_]+[:(:]","" , gsub("[:):]$", "", gsub(" ","" , gsub("-", "_", input$selectHSGenes))))), 2])# Extract gene symbol
   
-  #colnames(hk)[5] <- sdPop
+  idx = which(geneName$geneSymbol %in% gene)
+  ################ Regulatory Elements function predicted overall cell ########################
   
-  #tab <- as.character(which(HK_geneAtualizadoRef$Ensembl %in% "ENST00000248450"))
+  data = data.frame(fromJSON(paste0("https://epiregio.de/REST_API/GeneQuery/",as.character(geneName[idx,2]),"/")))
   
-  tab <- as.character(HK_geneAtualizadoRef[which(HK_geneAtualizadoRef$Ensembl %in% gsub("^[A-z0-9_]+[:(:]","" , gsub("[:):]$", "", gsub(" ","" , gsub("-", "_", input$selectHSGenes))))), 2])# Extract gene symbol
+  return(data)
+})
+
+
+###############################
+############# Begining #####################
+output$epiregio1 <- DT::renderDT({ 
+ 
   
-  #tab = "AAMP"
-  load(paste0("External/Harmonizome/", tab, "interest.RData"))
+  gene = outGeneForEpiregio()
   
-  dataHarmonizome2 = data
-  #dataHarmonizome2=AAMPinterest
-  rm(data)
+  ################ Regulatory Elements function predicted overall cell ########################
   
-  dataHarmonizome2 <- merge(data.frame(dataset="CMAP Signatures of Differentially Expressed Genes for Small Molecules"), dataHarmonizome2, by="dataset", all.x = T)[,-1]
+  data=dataEpiregio()
+ 
   
-  dataHarmonizome2 <- data.frame(Disease=dataHarmonizome2[,1])
-  
-  dataHarmonizome2$Disease <- as.character(dataHarmonizome2$Disease)
-  dataHarmonizome2$Disease[is.na(dataHarmonizome2$Disease)] <- "Not available for this gene."
+  dataEpi1 = data[,3:12]
   
   
-  link_a <- "<a href = 'http://amp.pharm.mssm.edu/Harmonizome/gene_set/"
   
-  #datalink <- gsub(" ", "+", as.character(dataHarmonizome2[3,2]))
+  dataEpi1$'Predicted Function' = ifelse(dataEpi1$regressionCoefficient > 0, "Activator", "Repressor")
   
-  link_b <- "/CMAP+Signatures+of+Differentially+Expressed+Genes+for+small+Molecules' target= '_blank'>"
+  for (i in 1:nrow(dataEpi1)) {
+   dataEpi1$CREMID[i] = ifelse(dataEpi1$CREMID[i]=="No CREM", "No CREM", paste0("<a href=", paste0('https://epiregio.de/cluster/',dataEpi1$CREMID[i]),
+                                                                                " target='_blank'>",dataEpi1$CREMID[i],"</a>"))
+  }
   
-  dataHarmonizome2 <- mutate(dataHarmonizome2, Link1=paste0(link_a,gsub(" ", "+", Disease),link_b,Disease,"</a>"))
+  dataEpi1 = arrange(dataEpi1, desc(normModelScore))[,c(1,11,3,4,9,10)]
   
-  dataHarmonizome2$Disease = dataHarmonizome2$Link1
+   colnames(dataEpi1)= c("REM ID", "Predicted Function", "REM Start", "REM End", "CREM ID", "Model Score")
   
-  #essai <- dataHarmonizome2[1:2,]
   
-  DT::datatable(unique(arrange(data.frame(small_molecules=dataHarmonizome2[,1]), small_molecules)), colnames = "CMAP Signatures of Differentially Expressed Genes for small Molecules", rownames = FALSE, escape = FALSE, class = 'cell-border stripe',
-                
+  
+  DT::datatable(dataEpi1, rownames = FALSE, escape = FALSE, class = 'cell-border stripe',
                 
                 caption = htmltools::tags$caption(
-                  style = 'caption-side: top; text-align: left; color: black; font-family: "Proxima Nova"', HTML(paste("Small molecule perturbations changing expression of", tab, "gene from the", "<a href='http://amp.pharm.mssm.edu/Harmonizome/dataset/CMAP+Signatures+of+Differentially+Expressed+Genes+for+Small+Molecules'", " ", "target='_blank'>Connectivity Map Signatures of Differentially Expressed Genes for Small Molecules</a>"), "dataset.")
+                  style = 'caption-side: top; text-align: left; color: black; font-family: "Proxima Nova"', HTML(paste("This table shows the Regulatory Elements (REMs) associated to", gene, ", their Predicted function, the Model score and the REM cluster (CREM) it is belonging to."))
                   #paste0("abc", "<div><a id='inf'>RPKM</a></div>")
                 ),
-                
                 
                 extensions =c ('ColReorder', 'Buttons', 'FixedHeader'),
                 
@@ -857,7 +867,105 @@ output$epiregio <- DT::renderDT({
                     ),
                   orderClasses = F,
                   scrollX = TRUE,
-                  pageLength = 5, lengthMenu = c(5, 10, 15, 20, nrow(dataHarmonizome2)),
+                  pageLength = 5, lengthMenu = c(5, nrow(dataEpi1)),
+                  colReorder = TRUE,
+                  initComplete = JS(
+                    "function(settings, json) {",
+                    "$(this.api().table().header()).css({'background-color': 'rgb(95, 95, 99)', 'padding-left' : '0px', 'color': '#fff', 'width' : 'auto !important'});",
+                    "$(this.api().table().body()).css({'padding-left' : '0px', 'width' : 'auto'});",
+                    "}")
+                ))
+})
+
+
+########################
+##############################
+output$epiregio2 <- DT::renderDT({ 
+
+  gene = outGeneForEpiregio()
+  
+  data=dataEpiregio()
+  
+  ################ Regulatory Elements cell-specific predicted function ########################
+  x1='<a  data-toggle="tooltip" '
+  x2='</a>'
+  
+#  interpretation: positive regression and open chomatin
+  
+  title1 = "title = 'Interpretation: The REM is an activator (positive regression coefficient) and the chromatin is open, so the REM is likely to enhance the gene’s expression in comparisons to cell types, where the chromatin is more closed.'"
+  
+  
+  
+  #  interpretation: positive regression and open chomatin
+  
+  title2 = "title = 'Interpretation: The REM is a repressor (negative regression coefficient) of the gene, but the chromatin is rather closed, so the REM is most likely not able to regulate the gene’s expression. This leads to a higher gene expression in comparison to cell types where the chromatin is more open.'"
+  
+  
+  
+  #  interpretation: positive regression and open chomatin
+  title3 = "title = 'Interpretation: The REM is interpreted as an activator (positive regression coefficient) , but the chromatin is closed. Thus, the REM is most likely not able to regulate the expression of the gene. Consequently, the gene expression is decreased in comparsion to a cell type where the chromatin is more open.'"
+  
+  
+  #  interpretation: positive regression and open chomatin
+  
+  title4 = "title = 'Interpretation: The REM is a repressor (positive regression coefficient) and the chromatin is rather open. This leads to a decreasing gene expression in comparsion to a cell type where the chroamtin is more closed.'"
+  
+  dataEpi2 = data.frame(data[,c(3,7)], data$cellTypeScore)
+  cat("dataEpi2 dimension", dim(dataEpi2), "\n")
+  
+  for (i in 1:nrow(dataEpi2)) {
+    for (j in 3:ncol(dataEpi2)) {
+      
+      if(dataEpi2[i,2] > 0 & dataEpi2[i,j] > 0) {
+        dataEpi2[i,j] = paste0(x1,title1, ">", dataEpi2[i,j],x2)
+      } 
+      
+      if(dataEpi2[i,2] < 0 & dataEpi2[i,j] < 0) {
+        dataEpi2[i,j] = paste0(x1,title2, ">", dataEpi2[i,j],x2)
+      } 
+      
+      if(dataEpi2[i,2] > 0 & dataEpi2[i,j] < 0) {
+        dataEpi2[i,j] = paste0(x1,title3, ">", dataEpi2[i,j],x2)
+      } 
+      
+      if(dataEpi2[i,2] < 0 & dataEpi2[i,j] > 0) {
+        dataEpi2[i,j] = paste0(x1,title4, ">", dataEpi2[i,j],x2)
+      }
+      
+      
+    }
+   
+  }
+  
+  
+  
+  colnames(dataEpi2) = gsub("\\.", " ", gsub("\\.\\.", " and ", colnames(dataEpi2)))
+  
+  colnames(dataEpi2)[1:2] = c("REM ID", "Regression Coefficient")
+  
+  DT::datatable(dataEpi2, rownames = FALSE, escape = FALSE, class = 'cell-border stripe',
+                
+                caption = htmltools::tags$caption(
+                  style = 'caption-side: top; text-align: left; color: black; font-family: "Proxima Nova"', HTML(paste("Cell type specific regulatory elements of:", gene, ". Hover the mouse cursor over the each Cell type score to see the interpretation.", "<a href='https://epiregiodb.readthedocs.io/en/latest/UseCases.html#gene-query'", " ", "target='_blank'>More informations</a>"), " from Epiregio documentation.")
+                  #paste0("abc", "<div><a id='inf'>RPKM</a></div>")
+                ),
+                
+                extensions =c ('ColReorder', 'Buttons', 'FixedHeader'),
+                
+                options = list(
+                  fixedHeader = FALSE,
+                  autoWidth = TRUE,
+                  columnDefs = list(list(width = '200px', className = 'dt-center', targets = "_all")),   
+                  dom = 'Blfrtip',   
+                  buttons = 
+                    list(
+                      extend = 'collection',
+                      buttons = c('csv', 'excel'),
+                      text = 'Download'
+                    ),
+                  orderClasses = F,
+                  scrollX = TRUE,
+                  pageLength = 5, lengthMenu = c(5, nrow(dataEpi2)),
                   colReorder = TRUE,
                   initComplete = JS(
                     "function(settings, json) {",

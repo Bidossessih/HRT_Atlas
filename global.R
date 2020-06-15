@@ -5,7 +5,7 @@ library(shinyjs)
 library(shinycssloaders)
 #shinycssloaders option
 options(spinner.type=5)
-
+library(jsonlite)
 library(DT)
 
 library(dbplyr)
@@ -15,6 +15,9 @@ library(ggplot2)
 library(RSQLite)
 
 con <- dbConnect(RSQLite::SQLite(), "~/Repository/Housekeeping and Reference Transcript Atlas/db/Housekeeping_human_mouse_HRTatlas_version.sqlite")
+#con <- dbConnect(RSQLite::SQLite(), "~/Repository/Housekeeping and Reference Transcript Atlas/db/Housekeeping_human_mouse_HRTatlas_version.sqlite")
+
+#con <- dbConnect(RSQLite::SQLite(), "~/Área de Trabalho/analise_HKG/tissue_types/connective_tissue/New_Analysis/New_11_06_2020/LogMCF_Housekeeping_human_mouse.sqlite")
 
 #con <- dbConnect(RSQLite::SQLite(), "/srv/shiny-server/housekeepingAtlas/db/Housekeeping_human_mouse_HRTatlas_version.sqlite")
 
@@ -66,3 +69,10 @@ stringsasfactors = TRUE
 ###########################
 svgico1 ='<svg onclick="myModal()" height="20pt" viewBox="-59 0 511 512" width="20pt" xmlns="http://www.w3.org/2000/svg"'
 svgico2 = '><path d="m386.136719 430.289062-115.097657-207.175781v-11.113281h-45c-8.285156 0-15-6.714844-15-15s6.714844-15 15-15h45v-30h-75c-8.285156 0-15-6.714844-15-15s6.714844-15 15-15h75v-30h-45c-8.285156 0-15-6.714844-15-15s6.714844-15 15-15h45v-32h15c8.28125 0 15-6.714844 15-15s-6.71875-15-15-15h-180c-8.285156 0-15 6.714844-15 15s6.714844 15 15 15h15v193.15625l-113.691406 207.40625c-20.078125 36.632812 6.394532 81.4375 48.230469 81.4375h282.480469c41.914062 0 68.460937-45.019531 48.078125-81.710938zm0 0"/></svg>'
+
+
+############### Load gene for epiregio REM computation
+
+load("www/EpiRegio_Gene.RData")
+
+                            
