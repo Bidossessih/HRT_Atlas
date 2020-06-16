@@ -27,13 +27,13 @@ includeHTML("External/HTML/homePageHuman.html"),
                                         
                                         radioButtons("mfc", "Scale of RPKM:",
                                                      c("Logarithmic" = "log",
-                                                       "Linear" = "linear")), br(), hr(), br(), 
-                                        sliderInput("rpkm", "Average of RPKM:",
-                                                    min = 1, max = 30, value = 30
+                                                       "Linear" = "linear"), selected = "log"), br(), hr(), br(), 
+                                        sliderInput("rpkm", "Mean of RPKM higher or equal than:",
+                                                    min = 1, max = 100, value = 30
                                         ), br(), hr(),
                                         
                                         
-                                        verbatimTextOutput("outxId", placeholder = FALSE),
+                                        #verbatimTextOutput("outxId", placeholder = FALSE),
                                         
                                         div(id="sel1", style="width: 100%;", uiOutput("selectUI")),
                                         
@@ -47,7 +47,7 @@ includeHTML("External/HTML/homePageHuman.html"),
                           
                           
                           tabsetPanel(id="tabsetID",
-                              tabPanel(id="ref", "Reference Transcripts", DT::DTOutput("tabHK")),#)#,
+                              tabPanel(id="ref", "Reference Transcripts", br(), uiOutput("outCap"), uiOutput("tabHK")),#)#,
                               tabPanel(id="rmodifiers", "Expression Modifiers", br(),
                                        span(style="text-align:justify", "HRT Atlas v1.0 is integrated with", HTML("<a href='http://amp.pharm.mssm.edu/Harmonizome/' target='_blank'>Harmonizome</a>"), "database.", br(),
                                             strong(textOutput("genenameChoice"))), br(),
@@ -145,6 +145,8 @@ observeEvent(input$previousSearch, {
   shinyjs::show("homehuman")
   shinyjs::hide("tabpanelUI")
   reset("search")
+  reset("rpkm")
+  reset("mfc")
   
   
 })
@@ -198,18 +200,19 @@ output$selectUI <- renderUI({
 
 
 
-###############################
+##############Reference transcript table#################
 
-output$tabHK <- DT::renderDT({ 
-  #load(paste0("External/Data/", input$search,".RData"))
+output$outCap <- renderUI({
   
-  #connect to database
-  #con <- dbConnect(RSQLite::SQLite(), "/srv/shiny-server/Housekeepingapp/db/Housekeeping.sqlite")
-  #con <- src_sqlite("/home/bidossessi/Desktop/Ubuntu/RefTranscriptDb/HK Transcript_sqlite/Housekeeping.sqlite")
-  #Query
+  # Compute reference table based on user inputs and filtering criteria
+  if(input$mfc=="linear"){
+    con <- dbConnect(RSQLite::SQLite(), "~/Área de Trabalho/analise_HKG/tissue_types/connective_tissue/New_Analysis/New_11_06_2020/MCF_Housekeeping_human_mouse.sqlite")
+    
+  } 
+  
   table=gsub(" ", "_", input$search)
   
-    data <- data.frame(tbl(con, table))
+  data <- data.frame(tbl(con, table))
   #data <- load(paste0("External/Data/db1/", table, ".RData"))
   
   
@@ -221,20 +224,163 @@ output$tabHK <- DT::renderDT({
   
   data <- data.frame(data)
   
-  #data = TissueResultMerged
+  if(input$mfc=="log"){
+    hk <- select(data, c("Ensembl","Gene.name", "Mean", "SD_of_log", "MCF_Log_Mean", "Max","Min","Log_MFC_min_and_mean"))
+    
+  } else {
+    hk <- select(data, c("Ensembl","Gene.name", "Mean", "SD_of_log", "MCF_mean", "Max","Min","MFC_min_and_mean"))
+  }
   
-  hk <- select(data, c("Rank","Transcript_ID","Gene_name", "RPKM", "SD_Log2_RPKM", "MFC_mean", "Chromosome","Transcript_start","Transcript_end"))
+  cat("dimension of line 241:", dim(hk), "\n")
+  #Filter only HK transcripts
+  hk <- unique(na.omit(merge(hk, Housekeeping_TranscriptFiltered[,c(1,3:5)], by="Ensembl", all.y=T)))
   
-  #hk <- data[, which(colnames(data) %in% c("Rank","Transcript_ID","Gene_name", "RPKM", "SD_Log2_RPKM", "MFC_min", "Chromosome","Transcript_start","Transcript_end"))]
-  hk[, c(4)] <- round(hk[, c(4)], digits = 0)
   
-  hk[, c(5:6)] <- round(hk[, c(5:6)], digits = 2)
-  colnames(hk) <- c("Rank", "Ensembl ID", "Gene", "RPKM" , "Std deviation", "MFC", "Chromosome", "Start position", "End position")
-  hk <- mutate(hk, Link1=paste0('<a href=https://www.genecards.org/cgi-bin/carddisp.pl?gene=',hk$Gene, ' ' , 'target="_blank"'))
-  hk <- mutate(hk, Link=paste0(Link1,'>',hk$Gene, '</a>'))
+  #Apply rpkm criteria selected by the user
+  hk = filter(hk, Mean >= input$rpkm)
   
-  hk[,3] <- hk[,11]
-  hk <- hk[,1:6]
+  
+  # Ranking
+  
+  
+  if(input$mfc=="log"){
+    #hk <- select(data, c("Ensembl","Gene.name", "Mean", "SD_of_log", "MCF_Log_Mean", "Max","Min","Log_MFC_min_and_mean"))
+    hk <- hk %>% arrange(Log_MFC_min_and_mean) %>% mutate(RankMFC=1:nrow(hk))
+    
+    hk <- hk %>% arrange(desc(Mean)) %>% mutate(RankRPKM=1:nrow(hk)) 
+    
+    hk <- hk %>% mutate(RankProd=RankMFC*RankRPKM) %>%  arrange(RankProd) %>% mutate(Rank=1:nrow(hk))
+    
+    
+    
+  } else {
+    #hk <- select(data, c("Ensembl","Gene.name", "Mean", "SD_of_log", "MCF_mean", "Max","Min","MFC_min_and_mean"))
+    
+    hk <- hk %>% arrange(MFC_min_and_mean) 
+    
+    if(nrow(hk)>0){
+      
+      hk <- hk %>% mutate(RankMFC=1:nrow(hk))
+      
+      
+      hk <- hk %>% arrange(desc(Mean)) %>% mutate(RankRPKM=1:nrow(hk)) 
+      
+      hk <- hk %>% mutate(RankProd=RankMFC*RankRPKM) %>%  arrange(RankProd) %>% mutate(Rank=1:nrow(hk))
+    } else {
+      # This condition has only been used to make error mensage rending when user filter
+      hk = vector(mode = "list")
+    }
+    
+    
+  }
+  
+  if(class(hk)=="data.frame"){
+    hk = filter(hk, Mean >= input$rpkm)
+    HTML(paste0(nrow(hk), " ", "Transcripts found from ", " ", tab[,2], " ", "high quality", " ", "<a class='font-weight-bold font-italic'>",input$search, "</a> samples."))
+    
+  } 
+  
+ 
+  
+  })
+
+
+
+
+
+#wrappe DT::renderDT in a renderUI to control error mensage
+#This strategy can solve many shiny problem and is able to either table or other Ui element 
+#with the same code
+
+output$tabHK <- renderUI({
+  
+  
+ # Compute reference table based on user inputs and filtering criteria
+  if(input$mfc=="linear"){
+    con <- dbConnect(RSQLite::SQLite(), "~/Área de Trabalho/analise_HKG/tissue_types/connective_tissue/New_Analysis/New_11_06_2020/MCF_Housekeeping_human_mouse.sqlite")
+    
+  } 
+  
+  
+  
+  table=gsub(" ", "_", input$search)
+  
+  data <- data.frame(tbl(con, table))
+  #data <- load(paste0("External/Data/db1/", table, ".RData"))
+  
+  
+  #disconnect
+  #dbDisconnect(con)
+  #load(paste0("External/Data/Ref/", table,"nonPseudogene.RData"))
+  
+  tab <- tab_echant[table,]
+  
+  data <- data.frame(data)
+  
+  if(input$mfc=="log"){
+    hk <- select(data, c("Ensembl","Gene.name", "Mean", "SD_of_log", "MCF_Log_Mean", "Max","Min","Log_MFC_min_and_mean"))
+    
+  } else {
+    hk <- select(data, c("Ensembl","Gene.name", "Mean", "SD_of_log", "MCF_mean", "Max","Min","MFC_min_and_mean"))
+  }
+  
+  cat("dimension of line 241:", dim(hk), "\n")
+  #Filter only HK transcripts
+  hk <- unique(na.omit(merge(hk, Housekeeping_TranscriptFiltered[,c(1,3:5)], by="Ensembl", all.y=T)))
+  
+  
+  #Apply rpkm criteria selected by the user
+  hk = filter(hk, Mean >= input$rpkm)
+  
+  cat("dimension of line 248; after rpkm:", dim(hk), "\n")
+  # Ranking
+  
+  
+  if(input$mfc=="log"){
+    #hk <- select(data, c("Ensembl","Gene.name", "Mean", "SD_of_log", "MCF_Log_Mean", "Max","Min","Log_MFC_min_and_mean"))
+    hk <- hk %>% arrange(Log_MFC_min_and_mean) %>% mutate(RankMFC=1:nrow(hk))
+    
+    hk <- hk %>% arrange(desc(Mean)) %>% mutate(RankRPKM=1:nrow(hk)) 
+    
+    hk <- hk %>% mutate(RankProd=RankMFC*RankRPKM) %>%  arrange(RankProd) %>% mutate(Rank=1:nrow(hk))
+    
+    
+    cat("dimension of line 261; after mcf:", dim(hk), "\n")
+  } else {
+    #hk <- select(data, c("Ensembl","Gene.name", "Mean", "SD_of_log", "MCF_mean", "Max","Min","MFC_min_and_mean"))
+    
+    hk <- hk %>% arrange(MFC_min_and_mean) 
+    
+    if(nrow(hk)>0){
+      
+      hk <- hk %>% mutate(RankMFC=1:nrow(hk))
+      
+      
+      hk <- hk %>% arrange(desc(Mean)) %>% mutate(RankRPKM=1:nrow(hk)) 
+      
+      hk <- hk %>% mutate(RankProd=RankMFC*RankRPKM) %>%  arrange(RankProd) %>% mutate(Rank=1:nrow(hk))
+    } else {
+      # This condition has only been used to make error mensage rending when user filter
+      hk = vector(mode = "list")
+    }
+    
+    
+  }
+  
+
+  #########Test whether the filtering used by the user provide any reference transcript#######
+  
+  
+  if(class(hk)=="data.frame") {
+    
+    #Apply rpkm criteria selected by the user
+    hk = filter(hk, Mean >= input$rpkm)
+    
+    cat("dimension of line 292; after rpkm:", dim(hk), "\n")
+  hk <- hk[, c(15,1:4,8:11)]
+  
+  hk[,3] <- paste0(paste0('<a href=https://www.genecards.org/cgi-bin/carddisp.pl?gene=',hk[,3], ' ' , 'target="_blank"'),'>',hk[,3], '</a>')
+  
   
   #Popup of colnames
   
@@ -245,28 +391,19 @@ output$tabHK <- DT::renderDT({
   ensemblPop <-'<a  data-toggle="tooltip" title="Transcript identification according to Ensembl database."> Ensembl ID<img src="info.png" style="width: 10px;"></a>'
   
   sdPop <-'<a  data-toggle="tooltip" title="Variation estimated as standard deviation of log2 of Read Per Kilobase Million."> Std Deviation <img src="info.png" style="width: 10px;"></a>'
+  hk = data.frame(hk)
+  names(hk) <- c("Rank", ensemblPop, "Gene Symbol",rpkmPop,sdPop,mfcPop, "Chromosome", "Start position", "End position")
   
-  #rpkm <- HTML("<a href='https://www.ebi.ac.uk/training/online/glossary/rpkm'>RPKM</a>") #link of rpkm definition
-  colnames(hk)[4] <- rpkmPop
-  
-  colnames(hk)[6] <- mfcPop
-  
-  colnames(hk)[2] <- ensemblPop
-  
-  colnames(hk)[5] <- sdPop
-  #https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_tooltip
-  
-  #colnames(hk)[4] <- rpkmPop#'<div class="tooltip">RPKM<span class="tooltiptext">Reads Per Kilobase of transcript, per Million mapped reads (<a id="inf" style="color:white" href="http://www.arrayserver.com/wiki/index.php?title=RPKM">RPKM</a>) is a normalized unit of transcript expression. It scales by transcript length to compensate for the fact that most RNA-seq protocols will generate more sequencing reads from longer RNA molecules.</span></div>'
-  
-  #colnames(hk)[4] <- as.character(popify(actionLink(inputId="t_1", label=colnames(hk)[4]), title=paste("message1"), placement = "bottom", trigger = "hover", options = NULL))
-  
-  DT::datatable(na.omit(arrange(as.data.frame(hk), Rank)), rownames = FALSE, escape = FALSE, class = 'cell-border stripe',
+  ##################### End of reference transcript table computation#######################
+output$mytabHkwapper <- DT::renderDT({ 
+  hkRow = nrow(hk)
+  #https://github.com/rstudio/DT/issues/155
+  DT::datatable(hk, rownames = FALSE, escape = FALSE, class = 'cell-border stripe', 
                 
-                caption = htmltools::tags$caption(
-                  style = 'caption-side: top; text-align: left; color: black; font-family: "Proxima Nova"', HTML(paste0(nrow(hk), " ", "Transcripts found from ", " ", tab[,2], " ", "high quality", " ", "<a class='font-weight-bold font-italic'>",input$search, "</a> ", "samples. 
-                                                                                                                        Highly expressed transcripts based on", " ", "<a href='https://www.ebi.ac.uk/training/online/glossary/rpkm'", " ", "target='_blank'>RPKM</a>"), "are highlighted in green and moderatly expressed transcripts in blue.")
+                #caption = htmltools::tags$caption(
+                 # style = 'caption-side: top; text-align: left; color: black; font-family: "Proxima Nova"', HTML(paste0(hkRow, " ", "Transcripts found from ", " ", tab[,2], " ", "high quality", " ", "<a class='font-weight-bold font-italic'>",input$search, "</a> samples."))
                   #paste0("abc", "<div><a id='inf'>RPKM</a></div>")
-                  ),
+                  #),
                 extensions =c ('ColReorder', 'Buttons', 'FixedHeader'),
                 
                 options = list(
@@ -281,17 +418,34 @@ output$tabHK <- DT::renderDT({
                     )), language = list(search = 'Filter:'),
                   orderClasses = F,
                   scrollX = TRUE,
-                  pageLength = 5, lengthMenu = c(5, nrow(hk)),
+                  pageLength = 5, #lengthMenu = c(5, nrow(hk)),
                   colReorder = TRUE,
                   initComplete = JS(
                     "function(settings, json) {",
                     "$(this.api().table().header()).css({'background-color': 'rgb(95, 95, 99)', 'padding-left' : '0px', 'color': '#fff', 'width' : 'auto !important'});",
                     "$(this.api().table().body()).css({'padding-left' : '0px', 'width' : 'auto'});",
                     "}")
-                )) %>% formatStyle(
-                  colnames(hk)[4],
-                  backgroundColor = styleInterval(50, c('rgba(0, 147, 255, 0.72)', '#4fda4f')))
+                )) #%>% formatStyle(
+                  #colnames(hk)[4],
+                  #backgroundColor = styleInterval(50, c('rgba(0, 147, 255, 0.72)', '#4fda4f')))
 })
+
+############## Render reference table if filtering is not very restrictive or display alert#################
+DT::DTOutput("mytabHkwapper")
+
+  
+  
+  } else {
+    
+    shinyjs::alert(paste(" Gene expression is naturally a skewed data. Please use logarithmic scale. \n",
+                         "Alternatively you can select only candidate reference transcripts with low expression. \n",
+                        
+                         "Warning: Low expressed transcripts may probably display high Ct value in qPCR experiments."))
+  }
+  
+  
+
+})#renderUI End
 
 #Display designed primers
 
@@ -384,7 +538,7 @@ refPop <-HTML('<a  data-toggle="tooltip" title="Suitable reference transcripts f
 
 
 
-################################Display table with disease from harmonizome
+################################Display table with disease from harmonizome#####################
 
 output$Mod1 <- DT::renderDT({ 
   
@@ -457,7 +611,8 @@ output$Mod1 <- DT::renderDT({
 
 
 
-################################Display table with GEO Signatures of Differentially Expressed Genes for small Molecules from harmonizome
+################################Display table with GEO Signatures of Differentially Expressed ##################
+############Genes for small Molecules from harmonizome
 
 output$Mod2 <- DT::renderDT({ 
   
@@ -643,7 +798,7 @@ output$validatedPrimerSelectInput = renderUI({
 
 
 ####output$outxId####
-output$outxId <- renderPrint(input$search)
+#output$outxId <- renderPrint(output$tabHK)
 #######################################GeneName######################################################
 output$genenameVal <- renderUI({
   
