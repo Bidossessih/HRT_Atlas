@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install -y \
     libcairo2-dev/unstable \
     libxt-dev \
     libssl-dev 
-    
+
 
 
 # Download and install ShinyServer (latest version)
@@ -27,7 +27,7 @@ RUN wget --no-verbose https://s3.amazonaws.com/rstudio-shiny-server-os-build/ubu
 
 # Install R packages that are required
 # TODO: add further package if you need!
-RUN R -e "install.packages(c('shiny', 'shinyjs', 'DT', 'plotly', 'ggpplot2', 'dplyr', 'DBI', 'RSQLite', 'dbplyr'), repos='http://cran.rstudio.com/')"
+RUN R -e "install.packages(c('shiny', 'shinyjs', 'DT', 'plotly', 'ggpplot2', 'dplyr', 'DBI', 'RSQLite', 'dbplyr', 'jsonlite', 'shinycssloaders'), repos='http://cran.rstudio.com/')"
 
 # Copy configuration files into the Docker image
 COPY shiny-server.conf  /etc/shiny-server/shiny-server.conf

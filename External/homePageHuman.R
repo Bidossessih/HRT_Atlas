@@ -33,7 +33,7 @@ includeHTML("External/HTML/homePageHuman.html"),
                                         ), br(), hr(),
                                         
                                         
-                                        #verbatimTextOutput("outxId", placeholder = FALSE),
+                                        verbatimTextOutput("outxId", placeholder = FALSE),
                                         
                                         div(id="sel1", style="width: 100%;", uiOutput("selectUI")),
                                         
@@ -47,7 +47,7 @@ includeHTML("External/HTML/homePageHuman.html"),
                           
                           
                           tabsetPanel(id="tabsetID",
-                              tabPanel(id="ref", "Reference Transcripts", br(), uiOutput("outCap"), uiOutput("tabHK")),#)#,
+                              tabPanel(id="ref", "Reference Transcripts", value="refTranscr", br(), uiOutput("outCap"), withSpinner(uiOutput("tabHK"))),#)#,
                               tabPanel(id="rmodifiers", "Expression Modifiers", br(),
                                        span(style="text-align:justify", "HRT Atlas v1.0 is integrated with", HTML("<a href='http://amp.pharm.mssm.edu/Harmonizome/' target='_blank'>Harmonizome</a>"), "database.", br(),
                                             strong(textOutput("genenameChoice"))), br(),
@@ -65,16 +65,16 @@ includeHTML("External/HTML/homePageHuman.html"),
                                      
                                        ),
                               
-                              tabPanel(id="refPrimer", "Specific Primers", hidden(div(id="noPrimer", "No primer")), DT::DTOutput("tabRef")),
+                              tabPanel(id="refPrimer", "Specific Primers", value="spec_primer", hidden(div(id="noPrimer", "No primer")), withSpinner(uiOutput("tabRef"))),
                               tabPanel(id="valPrimer", value="Validation", "Validation", class="Container-fluid",  
-                                 onclick= "alert(date())",
+                                 
                                        div(class="Container-fluid panelstyle",br(),
                                            
                                 
                                           #selectIput from server
                                           #verbatimTextOutput("outx"),
                                    
-                                         div(style="width: 100%;", uiOutput("genenameVal")),
+                                         div(style="width: 100%;", withSpinner(uiOutput("genenameVal"))),
                                           withSpinner(uiOutput('imageVal')))
                                        
                                        )
@@ -107,13 +107,30 @@ includeHTML("External/HTML/footer.html")
 # Show selectInput on click
 observeEvent(input$tabsetID, {
   if (input$tabsetID=="Validation"){
+    disable("mfc")
+    disable("rpkm")
     
-   shinyjs::show("sel2")
+    shinyjs::show("sel2")
   } else {
   shinyjs::hide("sel2")
 }
 })
 
+observeEvent(input$tabsetID, {
+  if (input$tabsetID=="spec_primer"){
+    disable("mfc")
+    disable("rpkm")
+    
+  } 
+})
+
+observeEvent(input$tabsetID, {
+  if (input$tabsetID=="refTranscr"){
+    enable("mfc")
+    enable("rpkm")
+    
+  } 
+})
 
 # Show selectInput on click
 
@@ -168,41 +185,11 @@ observeEvent(input$geneinputID, {
 })
 
 
+####################### Reference transcript table in reactive variable ###################
 
 
-
-
-###################### Render SelectectInput UI
-
-
-output$selectUI <- renderUI({
+humanRefTable <- reactive({
   
-  table=gsub(" ", "_", input$search)
-  
-  data <- data.frame(tbl(con, table))# uncomment
-  
-  #data <- load(paste0("External/Data/db1/", table, "RData"))
-  
-  
-  tab <- tab_echant[table,]
-  
-  data <- data.frame(data)
-  
-  data <- na.omit(select(data, c("Rank","Transcript_ID","Gene_name")) %>% arrange(Rank))
-  
-  #Use interaction and lexicography to preserve the ranking order
-  
-  choiceList <- interaction(data[,3], " ", "(", data[,2], ")", sep=  "", lex.order = FALSE)
-  
-  selectInput('selectHSGenes', 'Select a gene to show some modifiers of its expression', choiceList, selectize=FALSE)
-  
-})
-
-
-
-##############Reference transcript table#################
-
-output$outCap <- renderUI({
   
   # Compute reference table based on user inputs and filtering criteria
   if(input$mfc=="linear"){
@@ -212,15 +199,11 @@ output$outCap <- renderUI({
   
   table=gsub(" ", "_", input$search)
   
+ 
   data <- data.frame(tbl(con, table))
   #data <- load(paste0("External/Data/db1/", table, ".RData"))
   
-  
-  #disconnect
-  #dbDisconnect(con)
-  #load(paste0("External/Data/Ref/", table,"nonPseudogene.RData"))
-  
-  tab <- tab_echant[table,]
+ 
   
   data <- data.frame(data)
   
@@ -231,7 +214,7 @@ output$outCap <- renderUI({
     hk <- select(data, c("Ensembl","Gene.name", "Mean", "SD_of_log", "MCF_mean", "Max","Min","MFC_min_and_mean"))
   }
   
-  cat("dimension of line 241:", dim(hk), "\n")
+ # cat("dimension of line 241:", dim(hk), "\n")
   #Filter only HK transcripts
   hk <- unique(na.omit(merge(hk, Housekeeping_TranscriptFiltered[,c(1,3:5)], by="Ensembl", all.y=T)))
   
@@ -273,6 +256,55 @@ output$outCap <- renderUI({
     
     
   }
+  
+  
+  return(hk)
+  
+})
+
+
+
+
+###################### Render SelectectInput UI
+
+
+output$selectUI <- renderUI({
+  
+  
+  # Reference table from rective "humanRefTable"
+  
+  hk = humanRefTable()
+  
+  if(class(hk)=="data.frame"){
+    hk = filter(hk, Mean >= input$rpkm)
+    
+  data <- na.omit(select(hk, c("Rank","Ensembl","Gene.name")) %>% arrange(Rank))
+  
+  #Use interaction and lexicography to preserve the ranking order
+  
+  choiceList <- interaction(data[,3], " ", "(", data[,2], ")", sep=  "", lex.order = FALSE)
+  
+  selectInput('selectHSGenes', 'Select a gene to show some modifiers of its expression', choiceList, selectize=FALSE)
+  }
+  
+})
+
+
+
+##############Reference transcript table#################
+
+output$outCap <- renderUI({
+  
+  # Reference table from rective "humanRefTable"
+  table=gsub(" ", "_", input$search)
+  
+  
+  
+  tab <- tab_echant[table,]
+  
+  hk = humanRefTable()
+  
+  # Render caption outside of the table
   
   if(class(hk)=="data.frame"){
     hk = filter(hk, Mean >= input$rpkm)
@@ -295,77 +327,9 @@ output$outCap <- renderUI({
 output$tabHK <- renderUI({
   
   
- # Compute reference table based on user inputs and filtering criteria
-  if(input$mfc=="linear"){
-    con <- dbConnect(RSQLite::SQLite(), "~/Área de Trabalho/analise_HKG/tissue_types/connective_tissue/New_Analysis/New_11_06_2020/MCF_Housekeeping_human_mouse.sqlite")
-    
-  } 
+  # Reference table from rective "humanRefTable"
   
-  
-  
-  table=gsub(" ", "_", input$search)
-  
-  data <- data.frame(tbl(con, table))
-  #data <- load(paste0("External/Data/db1/", table, ".RData"))
-  
-  
-  #disconnect
-  #dbDisconnect(con)
-  #load(paste0("External/Data/Ref/", table,"nonPseudogene.RData"))
-  
-  tab <- tab_echant[table,]
-  
-  data <- data.frame(data)
-  
-  if(input$mfc=="log"){
-    hk <- select(data, c("Ensembl","Gene.name", "Mean", "SD_of_log", "MCF_Log_Mean", "Max","Min","Log_MFC_min_and_mean"))
-    
-  } else {
-    hk <- select(data, c("Ensembl","Gene.name", "Mean", "SD_of_log", "MCF_mean", "Max","Min","MFC_min_and_mean"))
-  }
-  
-  cat("dimension of line 241:", dim(hk), "\n")
-  #Filter only HK transcripts
-  hk <- unique(na.omit(merge(hk, Housekeeping_TranscriptFiltered[,c(1,3:5)], by="Ensembl", all.y=T)))
-  
-  
-  #Apply rpkm criteria selected by the user
-  hk = filter(hk, Mean >= input$rpkm)
-  
-  cat("dimension of line 248; after rpkm:", dim(hk), "\n")
-  # Ranking
-  
-  
-  if(input$mfc=="log"){
-    #hk <- select(data, c("Ensembl","Gene.name", "Mean", "SD_of_log", "MCF_Log_Mean", "Max","Min","Log_MFC_min_and_mean"))
-    hk <- hk %>% arrange(Log_MFC_min_and_mean) %>% mutate(RankMFC=1:nrow(hk))
-    
-    hk <- hk %>% arrange(desc(Mean)) %>% mutate(RankRPKM=1:nrow(hk)) 
-    
-    hk <- hk %>% mutate(RankProd=RankMFC*RankRPKM) %>%  arrange(RankProd) %>% mutate(Rank=1:nrow(hk))
-    
-    
-    cat("dimension of line 261; after mcf:", dim(hk), "\n")
-  } else {
-    #hk <- select(data, c("Ensembl","Gene.name", "Mean", "SD_of_log", "MCF_mean", "Max","Min","MFC_min_and_mean"))
-    
-    hk <- hk %>% arrange(MFC_min_and_mean) 
-    
-    if(nrow(hk)>0){
-      
-      hk <- hk %>% mutate(RankMFC=1:nrow(hk))
-      
-      
-      hk <- hk %>% arrange(desc(Mean)) %>% mutate(RankRPKM=1:nrow(hk)) 
-      
-      hk <- hk %>% mutate(RankProd=RankMFC*RankRPKM) %>%  arrange(RankProd) %>% mutate(Rank=1:nrow(hk))
-    } else {
-      # This condition has only been used to make error mensage rending when user filter
-      hk = vector(mode = "list")
-    }
-    
-    
-  }
+  hk = humanRefTable()
   
 
   #########Test whether the filtering used by the user provide any reference transcript#######
@@ -376,7 +340,7 @@ output$tabHK <- renderUI({
     #Apply rpkm criteria selected by the user
     hk = filter(hk, Mean >= input$rpkm)
     
-    cat("dimension of line 292; after rpkm:", dim(hk), "\n")
+    
   hk <- hk[, c(15,1:4,8:11)]
   
   hk[,3] <- paste0(paste0('<a href=https://www.genecards.org/cgi-bin/carddisp.pl?gene=',hk[,3], ' ' , 'target="_blank"'),'>',hk[,3], '</a>')
@@ -447,38 +411,41 @@ DT::DTOutput("mytabHkwapper")
 
 })#renderUI End
 
-#Display designed primers
 
 
-output$tabRef <- DT::renderDT({ 
-  # Check the availability of primers
-  #validate(
-   # need(gsub(" ", "_", input$search) %in% sampleTable$Type, paste("No available primer for", input$search, ". Please consider sharing with us any designed primer in your experiment."))
-  #)
+
+############# Display designed primers table ####################
+
+output$tabRef <- renderUI({
+if(input$tabsetID=="spec_primer"){
+  # Reference table from rective "humanRefTable"
   
-  # load primer table
-  #table=gsub(" ", "_", input$search)
+  hk = humanRefTable()
   
-  #load(paste0("External/Data/DesignedPrimer/", table, ".RData"))
   table=gsub(" ", "_", input$search)
-  
-  data <- data.frame(tbl(con, table))# uncomment
-  
-  #data <- load(paste0("External/Data/db1/", table, "RData"))
   
   
   tab <- tab_echant[table,]
+  #########Test whether the filtering used by the user provide any reference transcript#######
   
-  data <- data.frame(data)
   
-  data <- na.omit(select(data, c("Rank","Transcript_ID","Gene_name")) %>% arrange(Rank))
+  if(class(hk)=="data.frame") {
+    
+output$mytabHkprimer <- DT::renderDT({ 
   
+  
+  # primer table from rective "humanRefTable"
+  
+  data <- hk
+  
+  data <- na.omit(select(data, c("Rank","Ensembl","Gene.name")) %>% arrange(Rank))
+  
+  names(data) = c("Rank", "Transcript_ID", "Gene_name")
   
   dPrimer = na.omit(unique(merge(data[,1:2], humanPrimer, all.x = T, by = "Transcript_ID")))
   
   dPrimer = arrange(dPrimer, Rank)
   
-  #dPrimer$Rank = c(1:nrow(dPrimer))
   
   #Popup of colnames
   
@@ -523,7 +490,27 @@ output$tabRef <- DT::renderDT({
                 )) %>% formatStyle(
                   colnames(dPrimer)[4],
                   backgroundColor = styleInterval(50, c('#00ffe4', '#4fda4f')))
+  
+
+
 })
+
+############## Render reference table if filtering is not very restrictive or display alert#################
+DT::DTOutput("mytabHkprimer")
+
+
+
+} else {
+  
+  shinyjs::alert("No primer available with this filtering criteria.")
+  
+  }
+}
+  
+})# End of reactive primer table
+
+
+
 
 
 refPop <-HTML('<a  data-toggle="tooltip" title="Suitable reference transcripts for normalization of target gene expression during RT-qPCR analysis. This list present highly stable transcripts filtered stringent std deviation, MFC and expression level"> Reference Transcripts <img src="info.png" style="width: 10px;"></a>')
@@ -548,7 +535,7 @@ output$Mod1 <- DT::renderDT({
   
   
   tab <- as.character(HK_geneAtualizadoRef[which(HK_geneAtualizadoRef$Ensembl %in% gsub("^[A-z0-9_]+[:(:]","" , gsub("[:):]$", "", gsub(" ","" , gsub("-", "_", input$selectHSGenes))))), 2])# Extract gene symbol
-  
+  #cat("tab at line 498 is:", tab, "\n")
   #tab = "AAMP"
   load(paste0("External/Harmonizome/", tab, "interest.RData"))
   
@@ -772,14 +759,22 @@ output$Mod3 <- DT::renderDT({
 ###########################################################
 ############### Render selectInput from server side ###########
 outGeneName <- reactive({
+  
+  if(input$tabsetID=="Validation"){
+  # Reference table from rective "humanRefTable"
+  
+  hk = humanRefTable()
+  
+  if(class(hk)=="data.frame"){
+    hk = filter(hk, Mean >= input$rpkm)
+    
+  hk = filter(hk, Mean >= input$rpkm)
   #select transcript with primers
-  table=gsub(" ", "_", input$search)
+
+    
+  data <- na.omit(select(hk, c("Ensembl","Gene.name")))
   
-  data <- data.frame(tbl(con, table))
-  
-  data <- data.frame(data)
-  
-  data <- na.omit(select(data, c("Transcript_ID","Gene_name")))
+  names(data) = c("Transcript_ID", "Gene_name")
   
   data = na.omit(unique(merge(data, humanPrimer, all.x = T, by = "Transcript_ID")))
   
@@ -789,20 +784,42 @@ outGeneName <- reactive({
   #vars <- all.vars(parse(text = input$text))
   #vars <- as.list(vars)
   return(genelist)
+  
+  } else {
+    shinyjs::alert("No primer available with this filtering criteria.")
+  }
+  
+  }
 })
 
 ############### SelectInput in server side ####
 output$validatedPrimerSelectInput = renderUI({
+  
   selectInput('searchHSGenes2', 'Select a reference transcript to show its qPCR validation', as.list(outGeneName()), selectize=FALSE)
 })
 
 
 ####output$outxId####
-#output$outxId <- renderPrint(output$tabHK)
+output$outxId <- renderPrint(length(outGeneName())==0)
 #######################################GeneName######################################################
 output$genenameVal <- renderUI({
   
+  #if(
+  if(input$tabsetID=="Validation"){
+  
+    #rm(hk)
+  
+  hk = humanRefTable()
+  
+  if(class(hk)=="data.frame") {
+    
   condTest = input$searchHSGenes2
+  
+  if(length(outGeneName())==0){
+    shinyjs::alert("No primer available with this filtering criteria.")
+    shinyjs::hide("sel2")
+  }
+  
   if ( length(input$searchHSGenes2) != 0 && (input$searchHSGenes2 != "Select a reference transcript...")) {
   gene <- gsub("^[A-z0-9_]+[:(:]","" , gsub("[:):]$", "", gsub(" ","" , input$searchHSGenes2)))# Extract gene symbol
   
@@ -885,6 +902,14 @@ output$genenameVal <- renderUI({
   
   }
   
+  
+  } else {
+    shinyjs::alert("No primer available with this filtering criteria.")
+    shinyjs::hide("sel2")
+  }
+  
+  }
+  
 })
 
 
@@ -898,7 +923,19 @@ outGeneForImg <- reactive({
 
 output$imageVal = renderUI({
   
-  if ( length(input$searchHSGenes2) != 0 && (input$searchHSGenes2 != "Select a reference transcript...")) {
+  if(input$tabsetID=="Validation"){
+    
+  
+    
+    #rm(hk)
+    # Reference table from rective "humanRefTable"
+    
+    hk = humanRefTable()
+    
+    if(class(hk)=="data.frame") {
+      
+      
+  if ( length(input$searchHSGenes2) != 0) {
   
   HTML(paste0('<div class="container">
           <div class="row">
@@ -945,6 +982,12 @@ output$imageVal = renderUI({
             ')#End of HTML function
        )
   }
+      
+      
+    } else {
+      shinyjs::alert("No primer available with this filtering criteria.")
+    }
+    }
 })
 
 
@@ -1066,7 +1109,7 @@ output$epiregio2 <- DT::renderDT({
   title4 = "title = 'Interpretation: The REM is a repressor (positive regression coefficient) and the chromatin is rather open. This leads to a decreasing gene expression in comparsion to a cell type where the chroamtin is more closed.'"
   
   dataEpi2 = data.frame(data[,c(3,7)], data$cellTypeScore)
-  cat("dataEpi2 dimension", dim(dataEpi2), "\n")
+ # cat("dataEpi2 dimension", dim(dataEpi2), "\n")
   
   for (i in 1:nrow(dataEpi2)) {
     for (j in 3:ncol(dataEpi2)) {
