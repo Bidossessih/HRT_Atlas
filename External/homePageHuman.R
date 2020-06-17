@@ -4,8 +4,9 @@ useShinyjs(),
 includeHTML("External/HTML/homePageHuman.html"),
 
 
-                hidden(div(style="width:100%", id="tabpanelUI",
-                    div( class="container", style="min-height: 300px;",
+                div(style="width:100%;",
+                  hidden(div(style="width:100%", id="tabpanelUI",
+                    div( class="container resultPage", 
                              
                              div(class="row",
                                  
@@ -17,11 +18,12 @@ includeHTML("External/HTML/homePageHuman.html"),
                         
                         
                             
-                            div(class="col-sm-3 well", style="min-height:100vh; margin-bottom:0px; padding:15px",
+                            div(class="col-sm-3 well", style="margin-bottom:0px; padding:15px",
                                         tags$form(style="padding:0px",
                                                   
                                         div("Filter Criteria", class="text-black text-center font-weight-bold", style="width: 100%; height: 35px;"),
                                         hr(),
+                                        span(class="badge badge-pill badge-danger", style="float: right;", "New feature"), br(),
                                         span("log transformation of RPKM is the recommended option of MFC metric calculation. However, 
                                              users have the possibility to enable linear scale.", class="text-muted text-justify fontmuted"),br(),
                                         
@@ -33,7 +35,7 @@ includeHTML("External/HTML/homePageHuman.html"),
                                         ), br(), hr(),
                                         
                                         
-                                        verbatimTextOutput("outxId", placeholder = FALSE),
+                                        #verbatimTextOutput("outxId", placeholder = FALSE),
                                         
                                         div(id="sel1", style="width: 100%;", uiOutput("selectUI")),
                                         
@@ -58,6 +60,7 @@ includeHTML("External/HTML/homePageHuman.html"),
                               
                               #########Epiregio
                               tabPanel(id="epi", "Regulatory Elements", br(),
+                                       span(class="badge badge-pill badge-danger", style="float: right;", "New feature"),
                                        span(style="text-align:justify", "HRT Atlas v1.0 is integrated with", HTML("<a href='http://amp.pharm.mssm.edu/Harmonizome/' target='_blank'>Epiregio server</a>"), "via REST API.", br()
                                            ), br(),
                                        withSpinner(DT::DTOutput("epiregio1")),br(),br(),
@@ -65,11 +68,19 @@ includeHTML("External/HTML/homePageHuman.html"),
                                      
                                        ),
                               
-                              tabPanel(id="refPrimer", "Specific Primers", value="spec_primer", hidden(div(id="noPrimer", "No primer")), withSpinner(uiOutput("tabRef"))),
+                              tabPanel(id="refPrimer", "Specific Primers", value="spec_primer", br(),
+                                       p(class="text-justify", 
+                                         "We manually designed some transcript specific primers that can be used in your
+                                         experiments. The temperature calculations are done assuming 200 nM of annealing
+                                         oligo concentration, 50mM of salt concentration (Na+) and 1.5 mM of divalent ion
+                                         concentration (Mg++). We recommend using of at least two reference transcripts for
+                                         normalization purpose."
+                                       ), 
+                                       hidden(div(id="noPrimer", "No primer")), withSpinner(uiOutput("tabRef"))),
                               tabPanel(id="valPrimer", value="Validation", "Validation", class="Container-fluid",  
                                  
                                        div(class="Container-fluid panelstyle",br(),
-                                           
+                                           span(class="badge badge-pill badge-danger",style="float: right;", "New feature"),
                                 
                                           #selectIput from server
                                           #verbatimTextOutput("outx"),
@@ -87,7 +98,7 @@ includeHTML("External/HTML/homePageHuman.html"),
                          ) #End sidebarlayout
                         )
                           )#End hidden
-                )#End wrapper of hideen
+                ))#End wrapper of hideen
                   ),# wrapper
 
 includeHTML("External/HTML/footer.html")
@@ -103,6 +114,7 @@ includeHTML("External/HTML/footer.html")
 
 
 ################################## Server code
+
 
 # Show selectInput on click
 observeEvent(input$tabsetID, {
@@ -170,12 +182,15 @@ observeEvent(input$previousSearch, {
 
 
 observeEvent(input$buttonresult, {
+  if(input$search==""){
+    shinyjs::alert("Please select a tissue or cell type.")
+  } else {
   shinyjs::hide("homehuman")
   shinyjs::show("tabpanelUI2")
   shinyjs::show("tabpanelUI")
   shinyjs::show("headersearch")
   shinyjs::show("headersearch2")
-  
+  }
 })
 
 observeEvent(input$geneinputID, {
@@ -193,8 +208,7 @@ humanRefTable <- reactive({
   
   # Compute reference table based on user inputs and filtering criteria
   if(input$mfc=="linear"){
-    con <- dbConnect(RSQLite::SQLite(), "~/Área de Trabalho/analise_HKG/tissue_types/connective_tissue/New_Analysis/New_11_06_2020/MCF_Housekeeping_human_mouse.sqlite")
-    
+    con <- con1
   } 
   
   table=gsub(" ", "_", input$search)
@@ -278,7 +292,7 @@ output$selectUI <- renderUI({
   if(class(hk)=="data.frame"){
     hk = filter(hk, Mean >= input$rpkm)
     
-  data <- na.omit(select(hk, c("Rank","Ensembl","Gene.name")) %>% arrange(Rank))
+  data <- na.omit(select(hk, c("Rank","Ensembl","Gene.name")) %>% arrange(Gene.name))
   
   #Use interaction and lexicography to preserve the ranking order
   
@@ -308,7 +322,7 @@ output$outCap <- renderUI({
   
   if(class(hk)=="data.frame"){
     hk = filter(hk, Mean >= input$rpkm)
-    HTML(paste0(nrow(hk), " ", "Transcripts found from ", " ", tab[,2], " ", "high quality", " ", "<a class='font-weight-bold font-italic'>",input$search, "</a> samples."))
+    HTML(paste0(nrow(hk), " ", "Transcripts found from ", " ", tab[,2], " ", "high quality", " ", "<a class='font-weight-bold font-italic'>",input$search, "</a> samples. <a class='font-weight-bold'>Following the MIQE guidelines we recommend using of at least two reference transcripts.</a>"))
     
   } 
   
@@ -377,7 +391,7 @@ output$mytabHkwapper <- DT::renderDT({
                   buttons = 
                     list( 'copy', 'print', list(
                       extend = 'collection',
-                      buttons = c('csv', 'excel','pdf'),
+                      buttons = c('csv','pdf'),
                       text = 'Download'
                     )), language = list(search = 'Filter:'),
                   orderClasses = F,
@@ -463,13 +477,13 @@ output$mytabHkprimer <- DT::renderDT({
    #                                          svgico1,"id=", Gene,"data-filter=", Gene, svgico2, "</a>"))
   #dPrimer = dPrimer[, c(1,2,9,3:8)]
 
-  
+  colnames(dPrimer)[c(2,8)] = c("Ensembl ID", "Amplicon length (bp)")
   
   DT::datatable(na.omit(dPrimer), rownames = FALSE, escape = FALSE, class = 'cell-border stripe',
                 
-                caption = htmltools::tags$caption(
-                  style = 'caption-side: top; text-align: left; color: black; font-family: "Proxima Nova"', "We manually designed some transcript specific primers that can be used in your experiments. The temperature calculations are done assuming 200 nM of annealing oligo concentration. We recommend using of at least two reference transcripts for normalization purpose."
-                ),
+                #caption = htmltools::tags$caption(
+                 # style = 'caption-side: top; text-align: left; color: black; font-family: "Proxima Nova"', "We manually designed some transcript specific primers that can be used in your experiments. The temperature calculations are done assuming 200 nM of annealing oligo concentration, 50mM of salt concentration (Na+) and 1.5 mM of divalent ion concentration (Mg++). We recommend using of at least two reference transcripts for normalization purpose."
+              #  ),
                 extensions =c ('ColReorder', 'Buttons', 'FixedHeader'),
                 
                 options = list(
@@ -477,7 +491,7 @@ output$mytabHkprimer <- DT::renderDT({
                   columnDefs = list(list(className = 'dt-center', targets = "_all")),   
                   dom = 'Blfrtip',   
                   buttons = 
-                    list('csv', 'excel','pdf'), language = list(search = 'Filter:'),
+                    list('csv','pdf'), language = list(search = 'Filter:'),
                      
                   orderClasses = TRUE,
                   scrollX = TRUE,
@@ -580,7 +594,7 @@ output$Mod1 <- DT::renderDT({
                   buttons = 
                     list(
                       extend = 'collection',
-                      buttons = c('csv', 'excel'),
+                      buttons = c('csv', 'pdf'),
                       text = 'Download'
                     ),
                   orderClasses = F,
@@ -658,7 +672,7 @@ output$Mod2 <- DT::renderDT({
                   buttons = 
                     list(
                       extend = 'collection',
-                      buttons = c('csv', 'excel'),
+                      buttons = c('csv', 'pdf'),
                       text = 'Download'
                     ),
                   orderClasses = F,
@@ -737,7 +751,7 @@ output$Mod3 <- DT::renderDT({
                   buttons = 
                     list(
                       extend = 'collection',
-                      buttons = c('csv', 'excel'),
+                      buttons = c('csv', 'pdf'),
                       text = 'Download'
                     ),
                   orderClasses = F,
@@ -1060,7 +1074,7 @@ output$epiregio1 <- DT::renderDT({
                   buttons = 
                     list(
                       extend = 'collection',
-                      buttons = c('csv', 'excel'),
+                      buttons = c('csv', 'pdf'),
                       text = 'Download'
                     ),
                   orderClasses = F,
@@ -1158,7 +1172,7 @@ output$epiregio2 <- DT::renderDT({
                   buttons = 
                     list(
                       extend = 'collection',
-                      buttons = c('csv', 'excel'),
+                      buttons = c('csv', 'pdf'),
                       text = 'Download'
                     ),
                   orderClasses = F,

@@ -1,7 +1,7 @@
 # Install R version 3.5
 FROM r-base:3.5.0
 
-MAINTAINER Bidossessi Wilfried Hounkpe "openbiotools@gmail.com"
+LABEL maintainer="Bidossessi Wilfried Hounkpe openbiotools@gmail.com"
 
 # Install Ubuntu packages
 RUN apt-get update && apt-get install -y \

@@ -137,7 +137,7 @@
             the analysis of more than 11,000 high quality RNA-seq datasets, obtained from <a
               href="https://gtexportal.org/home/" target="_blank">GTEx</a> (version 7),
             a comprehensive public resource of tissue-specific gene expression. Data from 52 different tissue and
-            cell types were obtained. In addition, data from 30 tissues and cell types were obtained from <a
+            cell types were obtained. In addition, data from 50 tissues and cell types were obtained from <a
               href="https://amp.pharm.mssm.edu/archs4/index.html" target="_blank">ARCHS4</a>,
             a mining tool for public RNA-seq experiments.
             The generation of mouse database included the analysis of 507 high quality RNA-seq datasets manually
@@ -159,10 +159,12 @@
           <p>
             Users can download a complete list of housekeeping transcripts and genes built from our analysis of
             more than 11,000 high quality human RNA-seq datasets and 507 mouse datasets. Alternatively, they can
-            search for the most suitable reference transcripts to normalize their qPCR experiments. These reference
+            search for the most suitable candidate reference transcripts to normalize their qPCR experiments. These
+            candidate reference
             transcripts represent the most stable transcripts for each of the different tissues or cell types
-            available in our database (82 and 16 for human and mouse respectively). In addition, specific primers
-            for some of these transcripts are also provided. In the download page, it also provides a short
+            available in our database (102 and 22 for human and mouse respectively). In addition, specific primers
+            for some of these transcripts are also provided and validated following MIQE guidelines. In the download
+            page, it also provides a short
             list of reference transcripts stably expressed at low variability in all of the tissue or cell types.
             This list is provided to normalize tissue or cell types that cannot be accessed from our database.
             As diseases and small molecules are known to affect gene expression variability,
@@ -172,6 +174,10 @@
             molecules that can modify their expression stability (based on differential expression) and intend
             to guide users in the choice of suitable reference genes for qPCR normalization.
 
+            In addition, HRT Atlas has been integrated with EpiRegio REST API.
+            <a href="https://epiregio.de/">EpiRegio</a> is a resource of Regulatory
+            EleMents (REMs) that are able to regulate the expression of their
+            target genes in different cell types and tissues.
           </p>
         </div>
       </div>
@@ -244,9 +250,10 @@
                 href="https://www.ebi.ac.uk/training/online/glossary/rpkm" target="_blank">RPKM</a> (reads per kilobase
               million)</li>
             <li>Variability of gene expression should be low within all tissues and cell types, as evidence by a
-              standard deviation of the log2 RPKM &#8826;1</li>
-            <li>Maximum fold change (MFC), represented by the ratio between maximum and mean RPKM of any of its
-              transcripts, must be lower than 2. Thus, only genes whose expression level in all samples fall within a
+              standard deviation of the log2 RPKM &#8826; 1</li>
+            <li>Maximum fold change (MFC), represented by the ratio between log2 of maximum and log2 of mean RPKM of any
+              of its transcripts, must be lower than 2. Thus, only genes whose expression level in all samples fall
+              within a
               very narrow range are classified as housekeeping genes.</li>
 
           </ul>
@@ -269,8 +276,15 @@
       <div id="collapse4" class="collapse" data-parent="#accordion">
         <div class="card-body" style="text-align:justify; line-height: 1.6;">
           <p>
-            Housekeeping transcripts stability was ranked based on mean RPKM, standard deviation of log2 RPKM and MFC
-            value.
+            We proposed the term <a class="font-weight-bold">reference transcript</a> to define transcripts that are
+            suitable for qPCR normalization
+            in a particular tissue type. These transcripts were selected from the list of the newly described HK
+            transcripts and have
+            also a very low variability (log2 of maximum RPKM &#8826; 2 x log2 of minimum RPKM and standard deviation
+            &#8826; 0.5) in specific
+            tissue types, but not necessary in all of the tissues included in the database.
+            Candidate reference transcripts stability was ranked based on mean RPKM, standard deviation of log2 RPKM and
+            MFC value.
             Giving n transcripts, three intermediate scores (k=3) with equal weight are generated (score-1, score-2, and
             score-3 for RKPM, standard deviation and MFC, respectively for each transcript). Score-1 assigns n to the
             highest
@@ -397,14 +411,14 @@
           cell type. Each transcript is identified by its Ensembl code, followed by the gene symbol.
           The expression level of each transcript is expressed as the mean value of reads per kilobase million
           (RPKM) for the specific tissue or cell type. Variability and maximum fold-change are expressed as the
-          standard deviation of the log2 RPKM, and the ratio of (maximum RPKM)/ (mean RPKM), respectively.
-          By default, results are ranked by the criteria described above (“How results are ranked?” section). In
-          addition,
-          a color code is used to categorize transcripts according to expression levels. Alternatively, transcripts can
-          be ranked
+          standard deviation of the log2 RPKM, and the ratio of log2(maximum RPKM)/ log2(mean RPKM), respectively.
+          By default, results are ranked by the criteria described above (“How results are ranked?” section).
+          Alternatively, transcripts can be ranked
           by the user by clicking in the arrow next to any of these parameters.
           Users can select the number of transcripts to be shown per page, and then download the full list displayed
-          on the screen in their preferred format (csv, Excel or Pdf).
+          on the screen in their preferred format (csv, Excel or Pdf). Finally user is allowed to
+          filter de candidate reference transcript table by disabling the logarithmic normalization option.
+          A minimum valor of RPKM can also be defined. The default is 30.
         </p>
         <br>
         <br>
@@ -421,6 +435,12 @@
         <br>
         <br>
         <h3>Screenshot showing specific primers qPCR validation</h3>
+        <br>
+        <br>
+        <img src="screenshotHomeEpiregio.png" style="width:100%; box-shadow: 0px 2px 16px #999;">
+        <br>
+        <br>
+        <h3>Screenshot showing regulatory elements retrieved fom EpiRegio server.</h3>
 
         <br>
         <br>

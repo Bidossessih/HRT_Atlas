@@ -1106,3 +1106,11 @@ display: inline-block;
 .fontmuted {
   font-size: smaller;
 }
+
+
+.resultPage {
+  min-height: 300px;
+  width: 100%;
+  margin-left: 50px;
+  margin-right: 0px;
+}

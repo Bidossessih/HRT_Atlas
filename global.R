@@ -14,17 +14,17 @@ library(dplyr)
 library(ggplot2)
 library(RSQLite)
 
-#con <- dbConnect(RSQLite::SQLite(), "~/Repository/Housekeeping and Reference Transcript Atlas/db/Housekeeping_human_mouse_HRTatlas_version.sqlite")
-#con <- dbConnect(RSQLite::SQLite(), "~/Repository/Housekeeping and Reference Transcript Atlas/db/Housekeeping_human_mouse_HRTatlas_version.sqlite")
+#con <- dbConnect(RSQLite::SQLite(), "~/Repository/Housekeeping and Reference Transcript Atlas/db/LogMCF_Housekeeping_human_mouse.sqlite")
 
-con <- dbConnect(RSQLite::SQLite(), "~/Área de Trabalho/analise_HKG/tissue_types/connective_tissue/New_Analysis/New_11_06_2020/LogMCF_Housekeeping_human_mouse.sqlite")
+#con1 <- dbConnect(RSQLite::SQLite(), "~/Repository/Housekeeping and Reference Transcript Atlas/db/MCF_Housekeeping_Mouse_mouse.sqlite")
 
-#con <- dbConnect(RSQLite::SQLite(), "/srv/shiny-server/housekeepingAtlas/db/Housekeeping_human_mouse_HRTatlas_version.sqlite")
+con <- dbConnect(RSQLite::SQLite(), "/srv/shiny-server/housekeepingAtlas/db/LogMCF_Housekeeping_human_mouse.sqlite")
 
+con1 <- dbConnect(RSQLite::SQLite(), "/srv/shiny-server/housekeepingAtlas/db/MCF_Housekeeping_human_mouse.sqlite")
 
 
 load("www/Housekeeping_TranscriptsMouse.RData")
-load("External/Data/DesignedPrimer/sampleTable.RData")
+#load("External/Data/DesignedPrimer/sampleTable.RData")
 load("External/Data/DesignedPrimer/RefInfoHumanHK2.RData")
 load("External/Data/primer/RefInfoMouseHK2.RData")
 #Load HK_RPKM
@@ -39,21 +39,23 @@ HK_RPKM = cbind(HK_RPKM1,HK_RPKM2,HK_RPKM3,HK_RPKM4)
 rm(HK_RPKM1,HK_RPKM2,HK_RPKM3,HK_RPKM4)
 
 load("External/Data/Housekeeping_Genes.RData")
-sampleTable <- filter(sampleTable, Designed_Primers>0)
+#sampleTable <- filter(sampleTable, Designed_Primers>0)
 
 
-load("External/Data/tab_echant.RData")
+load("External/Data/tab_echant_HRTA.RData")
 load("External/Data/GeneInfo.RData")
 
 load("External/Data/GeneMouse.RData")
 
-rownames(tab_echant) <- tab_echant$Type
+tab_echant <- tab_echant_HRTA
+ 
+rm(tab_echant_HRTA)
 
-load("External/Data/tab_echant_mouse_modified.RData")
+load("External/Data/tab_echant_mouse_HRTA.RData")
 
 load("External/Data/Housekeeping_TranscriptFiltered.RData")
-rownames(tab_echant_mouse) <- tab_echant_mouse$Type
-
+tab_echant_mouse <- tab_echant_mouse_HRTA
+rm(tab_echant_mouse_HRTA)
 #### Primer table
 
 humanPrimer <- read.csv(file = "www/Validation/Primers_Table/Human_Primer_Validation.csv", sep = ";")
