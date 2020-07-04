@@ -4,7 +4,7 @@ useShinyjs(),
 includeHTML("External/HTML/homePageHuman.html"),
 
 
-                div(style="width:100%;",
+                #div(style="width:100%;",
                   hidden(div(style="width:100%", id="tabpanelUI",
                     div( class="container resultPage", 
                              
@@ -23,7 +23,7 @@ includeHTML("External/HTML/homePageHuman.html"),
                                                   
                                         div("Filter Criteria", class="text-black text-center font-weight-bold", style="width: 100%; height: 35px;"),
                                         hr(),
-                                        span(class="badge badge-pill badge-danger", style="float: right;", "New feature"), br(),
+                                        #span(class="badge badge-pill badge-danger", style="float: right;", "New feature"), br(),
                                         span("log transformation of RPKM is the recommended option of MFC metric calculation. However, 
                                              users have the possibility to enable linear scale.", class="text-muted text-justify fontmuted"),br(),
                                         
@@ -35,7 +35,7 @@ includeHTML("External/HTML/homePageHuman.html"),
                                         ), br(), hr(),
                                         
                                         
-                                        #verbatimTextOutput("outxId", placeholder = FALSE),
+                                        verbatimTextOutput("outxId", placeholder = FALSE),
                                         
                                         div(id="sel1", style="width: 100%;", uiOutput("selectUI")),
                                         
@@ -45,7 +45,7 @@ includeHTML("External/HTML/homePageHuman.html"),
                                       ), #div sidebar
                                       
                                       
-                                      div(class="col-sm-9",
+                                      div(class="col-sm-9 tabpadding", 
                           
                           
                           tabsetPanel(id="tabsetID",
@@ -60,11 +60,12 @@ includeHTML("External/HTML/homePageHuman.html"),
                               
                               #########Epiregio
                               tabPanel(id="epi", "Regulatory Elements", br(),
-                                       span(class="badge badge-pill badge-danger", style="float: right;", "New feature"),
-                                       span(style="text-align:justify", "HRT Atlas v1.0 is integrated with", HTML("<a href='http://amp.pharm.mssm.edu/Harmonizome/' target='_blank'>Epiregio server</a>"), "via REST API.", br()
+                                      # span(class="badge badge-pill badge-danger", style="float: right;", "New feature"),
+                                       span(style="text-align:justify", "HRT Atlas v1.0 is integrated with", HTML("<a href='https://epiregio.de/' target='_blank'>Epiregio server</a>"), "via REST API.", br()
                                            ), br(),
                                        withSpinner(DT::DTOutput("epiregio1")),br(),br(),
-                                       withSpinner(DT::DTOutput("epiregio2"))
+                                      
+                                       withSpinner(uiOutput("epiregio2"))
                                      
                                        ),
                               
@@ -80,7 +81,7 @@ includeHTML("External/HTML/homePageHuman.html"),
                               tabPanel(id="valPrimer", value="Validation", "Validation", class="Container-fluid",  
                                  
                                        div(class="Container-fluid panelstyle",br(),
-                                           span(class="badge badge-pill badge-danger",style="float: right;", "New feature"),
+                                           #span(class="badge badge-pill badge-danger",style="float: right;", "New feature"),
                                 
                                           #selectIput from server
                                           #verbatimTextOutput("outx"),
@@ -98,7 +99,7 @@ includeHTML("External/HTML/homePageHuman.html"),
                          ) #End sidebarlayout
                         )
                           )#End hidden
-                ))#End wrapper of hideen
+                )#End wrapper of hideen
                   ),# wrapper
 
 includeHTML("External/HTML/footer.html")
@@ -150,6 +151,8 @@ observeEvent(input$tabsetID, {
   if (input$tabsetID=="Regulatory Elements" || input$tabsetID=="Expression Modifiers"){
     
     shinyjs::show("sel1")
+    disable("mfc")
+    disable("rpkm")
   } else {
     shinyjs::hide("sel1")
   }
@@ -814,7 +817,7 @@ output$validatedPrimerSelectInput = renderUI({
 
 
 ####output$outxId####
-output$outxId <- renderPrint(length(outGeneName())==0)
+output$outxId <- renderPrint(nrow(dataEpiregio())==0)
 #######################################GeneName######################################################
 output$genenameVal <- renderUI({
   
@@ -1040,6 +1043,7 @@ output$epiregio1 <- DT::renderDT({
   
   data=dataEpiregio()
  
+  if (nrow(dataEpiregio())>0) {
   
   dataEpi1 = data[,3:12]
   
@@ -1056,8 +1060,8 @@ output$epiregio1 <- DT::renderDT({
   
    colnames(dataEpi1)= c("REM ID", "Predicted Function", "REM Start", "REM End", "CREM ID", "Model Score")
   
-  
-  
+
+   
   DT::datatable(dataEpi1, rownames = FALSE, escape = FALSE, class = 'cell-border stripe',
                 
                 caption = htmltools::tags$caption(
@@ -1087,16 +1091,27 @@ output$epiregio1 <- DT::renderDT({
                     "$(this.api().table().body()).css({'padding-left' : '0px', 'width' : 'auto'});",
                     "}")
                 ))
+    
+  } else {
+    shinyjs::alert(paste("The model did not find putative Regulatory Elements that are associated with", gene, "in Epiregio server"))
+  }
+  
 })
 
 
 ########################
 ##############################
-output$epiregio2 <- DT::renderDT({ 
 
+output$epiregio2 <- renderUI({
+  
   gene = outGeneForEpiregio()
   
   data=dataEpiregio()
+  
+  if (nrow(dataEpiregio())>0) {
+    
+output$tabepiregio2 <- DT::renderDT({ 
+
   
   ################ Regulatory Elements cell-specific predicted function ########################
   x1='<a  data-toggle="tooltip" '
@@ -1185,6 +1200,20 @@ output$epiregio2 <- DT::renderDT({
                     "$(this.api().table().body()).css({'padding-left' : '0px', 'width' : 'auto'});",
                     "}")
                 ))
+  
 })
+  
+  DT::DTOutput("tabepiregio2")
+  
+  
+  
+} else {
+  
+ HTML(paste("<h3>No data available for", gene, "in", "<a href='https://epiregio.de/' target='_blank'>Epiregio server</a> </h3>"))
+  
+  }
 
+
+
+  })#renderUI End
 

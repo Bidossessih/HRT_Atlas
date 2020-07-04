@@ -5,7 +5,7 @@ fluidRow(#tags$title("Search Reference genes"), tags$meta(name="description", co
       includeHTML("External/HTML/homePageMouse.html"),
                   
       #verbatimTextOutput("out6"),
-      div(style="width:100%;",
+     # div(style="width:100%;",
           hidden(div(style="width:100%", id="tabpanelUI",
                      div( class="container resultPage", 
           
@@ -28,7 +28,7 @@ fluidRow(#tags$title("Search Reference genes"), tags$meta(name="description", co
                 div("Filter Criteria", class = "text-black text-center font-weight-bold", style =
                       "width: 100%; height: 35px;"),
                 hr(),
-                span(class="badge badge-pill badge-danger", style="float: right;", "New feature"), br(),
+                #span(class="badge badge-pill badge-danger", style="float: right;", "New feature"), br(),
                 span(
                   "log transformation of RPKM is the recommended option of MFC metric calculation. However,
                   users have the possibility to enable linear scale.",
@@ -57,7 +57,7 @@ fluidRow(#tags$title("Search Reference genes"), tags$meta(name="description", co
                 hr(),
                 
                 
-                verbatimTextOutput("outxId", placeholder = FALSE),
+                #verbatimTextOutput("outxId", placeholder = FALSE),
                 
                 div(id = "sel1", style = "width: 100%;", uiOutput("selectUI")),
                 
@@ -72,8 +72,7 @@ fluidRow(#tags$title("Search Reference genes"), tags$meta(name="description", co
             #div sidebar
             
             
-            div(
-              class = "col-sm-9",
+            div(class = "col-sm-9 tabpadding",
               
               
               tabsetPanel(
@@ -107,7 +106,7 @@ fluidRow(#tags$title("Search Reference genes"), tags$meta(name="description", co
                   
                   div(
                     class = "Container-fluid panelstyle",
-                    span(class="badge badge-pill badge-danger", style="float: right;", "New feature"),
+                    #span(class="badge badge-pill badge-danger", style="float: right;", "New feature"),
                     br(),
                     
                     
@@ -128,7 +127,7 @@ fluidRow(#tags$title("Search Reference genes"), tags$meta(name="description", co
             
           ) #End sidebarlayout
         )
-      ))),#End hidden), #End wrapper of hideen, #End of hidden
+      )),#End hidden), #End wrapper of hideen, #End of hidden
       
       includeHTML("External/HTML/footer.html")
                       
