@@ -35,12 +35,16 @@ includeHTML("External/HTML/homePageHuman.html"),
                                         ), br(), hr(),
                                         
                                         
-                                        verbatimTextOutput("outxId", placeholder = FALSE),
+                                        
+                                      #  verbatimTextOutput("outxId", placeholder = FALSE),
                                         
                                         div(id="sel1", style="width: 100%;", uiOutput("selectUI")),
                                         
-                                        div(id="sel2", style="width: 100%;", uiOutput('validatedPrimerSelectInput'))
                                         
+                                        div(id="sel2", style="width: 100%;", uiOutput('validatedPrimerSelectInput')),
+                                       
+                                         div(id="sel3", style="width: 100%;", uiOutput("selectUIEpi"))
+                                                    
                                         )#End form
                                       ), #div sidebar
                                       
@@ -59,13 +63,13 @@ includeHTML("External/HTML/homePageHuman.html"),
                                        withSpinner(DT::DTOutput("Mod3"))),
                               
                               #########Epiregio
-                              tabPanel(id="epi", "Regulatory Elements", br(),
+                              tabPanel(id="epi", "Regulatory Elements", value="Regulatory_Elements", br(),
                                       # span(class="badge badge-pill badge-danger", style="float: right;", "New feature"),
                                        span(style="text-align:justify", "HRT Atlas v1.0 is integrated with", HTML("<a href='https://epiregio.de/' target='_blank'>Epiregio server</a>"), "via REST API.", br()
                                            ), br(),
                                        withSpinner(DT::DTOutput("epiregio1")),br(),br(),
                                       
-                                       withSpinner(uiOutput("epiregio2"))
+                                       withSpinner(DT::DTOutput("epiregio2"))
                                      
                                        ),
                               
@@ -116,7 +120,6 @@ includeHTML("External/HTML/footer.html")
 
 ################################## Server code
 
-
 # Show selectInput on click
 observeEvent(input$tabsetID, {
   if (input$tabsetID=="Validation"){
@@ -148,13 +151,27 @@ observeEvent(input$tabsetID, {
 # Show selectInput on click
 
 observeEvent(input$tabsetID, {
-  if (input$tabsetID=="Regulatory Elements" || input$tabsetID=="Expression Modifiers"){
+  if (input$tabsetID=="Expression Modifiers"){
     
     shinyjs::show("sel1")
+    
     disable("mfc")
     disable("rpkm")
   } else {
     shinyjs::hide("sel1")
+  }
+  
+})
+
+
+observeEvent(input$tabsetID, {
+  if (input$tabsetID=="Regulatory_Elements"){
+    
+    shinyjs::show("sel3")
+    disable("mfc")
+    disable("rpkm")
+  } else {
+    shinyjs::hide("sel3")
   }
   
 })
@@ -214,13 +231,15 @@ humanRefTable <- reactive({
     con <- con1
   } 
   
+  
   table=gsub(" ", "_", input$search)
   
  
   data <- data.frame(tbl(con, table))
   #data <- load(paste0("External/Data/db1/", table, ".RData"))
   
- 
+  #dbDisconnect(con)
+  #dbDisconnect(con1)
   
   data <- data.frame(data)
   
@@ -817,7 +836,8 @@ output$validatedPrimerSelectInput = renderUI({
 
 
 ####output$outxId####
-output$outxId <- renderPrint(nrow(dataEpiregio())==0)
+output$outxId <- renderPrint(!is.null(input$selectHSGenesEpi))
+
 #######################################GeneName######################################################
 output$genenameVal <- renderUI({
   
@@ -1011,107 +1031,168 @@ output$imageVal = renderUI({
 
 ################ Epiregio #####################
 
+###################### Render SelectectInput UI
+
+
+output$selectUIEpi <- renderUI({
+  
+  
+  # Reference table from rective "humanRefTable"
+  
+  hk = humanRefTable()
+  
+  if(class(hk)=="data.frame"){
+    hk = filter(hk, Mean >= input$rpkm)
+    
+    data <- na.omit(select(hk, c("Rank","Ensembl","Gene.name")) %>% arrange(Gene.name))
+    
+    colnames(geneName)[1] = "Gene.name"
+    
+    data = na.omit(merge(geneName, data, by = "Gene.name", all.x = T))
+    #Use interaction and lexicography to preserve the ranking order
+    
+    choiceList <- interaction(as.character(data[,1]), " ", "(", data[,2], ")", sep=  "", lex.order = FALSE)
+    
+    selectInput('selectHSGenesEpi', 'Select a gene to show its putative Regulatory Elements', choiceList, selectize=FALSE)
+  }
+  
+})
+
+
+
 outGeneForEpiregio <- reactive({
   
-  gene <- as.character(HK_geneAtualizadoRef[which(HK_geneAtualizadoRef$Ensembl %in% gsub("^[A-z0-9_]+[:(:]","" , gsub("[:):]$", "", gsub(" ","" , gsub("-", "_", input$selectHSGenes))))), 2])# Extract gene symbol
+  gene <- as.character(gsub(" [:(:][A-z0-9_]*[:):]", "", input$selectHSGenesEpi))# Extract gene symbol
   
   return(gene)
 })
 
 ##### Data epiregio
-dataEpiregio <- reactive({
+#dataEpiregio <- reactive({
   
-  gene <- as.character(HK_geneAtualizadoRef[which(HK_geneAtualizadoRef$Ensembl %in% gsub("^[A-z0-9_]+[:(:]","" , gsub("[:):]$", "", gsub(" ","" , gsub("-", "_", input$selectHSGenes))))), 2])# Extract gene symbol
+ # gene <- as.character(HK_geneAtualizadoRef[which(HK_geneAtualizadoRef$Ensembl %in% gsub("^[A-z0-9_]+[:(:]","" , gsub("[:):]$", "", gsub(" ","" , gsub("-", "_", input$selectHSGenesEpi))))), 2])# Extract gene symbol
   
-  idx = which(geneName$geneSymbol %in% gene)
+  #idx = which(geneName$geneSymbol %in% gene)
   ################ Regulatory Elements function predicted overall cell ########################
   
-  data = data.frame(fromJSON(paste0("https://epiregio.de/REST_API/GeneQuery/",as.character(geneName[idx,2]),"/")))
+  #data = data.frame(fromJSON(paste0("https://epiregio.de/REST_API/GeneQuery/",as.character(geneName[idx,2]),"/")))
   
-  return(data)
-})
+  #return(data)
+#})
 
 
 ###############################
 ############# Begining #####################
-output$epiregio1 <- DT::renderDT({ 
- 
-  
-  gene = outGeneForEpiregio()
-  
-  ################ Regulatory Elements function predicted overall cell ########################
-  
-  data=dataEpiregio()
- 
-  if (nrow(dataEpiregio())>0) {
-  
-  dataEpi1 = data[,3:12]
-  
-  
-  
-  dataEpi1$'Predicted Function' = ifelse(dataEpi1$regressionCoefficient > 0, "Activator", "Repressor")
-  
-  for (i in 1:nrow(dataEpi1)) {
-   dataEpi1$CREMID[i] = ifelse(dataEpi1$CREMID[i]=="No CREM", "No CREM", paste0("<a href=", paste0('https://epiregio.de/cluster/',dataEpi1$CREMID[i]),
-                                                                                " target='_blank'>",dataEpi1$CREMID[i],"</a>"))
-  }
-  
-  dataEpi1 = arrange(dataEpi1, desc(normModelScore))[,c(1,11,3,4,9,10)]
-  
-   colnames(dataEpi1)= c("REM ID", "Predicted Function", "REM Start", "REM End", "CREM ID", "Model Score")
-  
 
-   
-  DT::datatable(dataEpi1, rownames = FALSE, escape = FALSE, class = 'cell-border stripe',
-                
-                caption = htmltools::tags$caption(
-                  style = 'caption-side: top; text-align: left; color: black; font-family: "Proxima Nova"', HTML(paste("This table shows the Regulatory Elements (REMs) associated to", gene, ", their Predicted function, the Model score and the REM cluster (CREM) it is belonging to."))
-                  #paste0("abc", "<div><a id='inf'>RPKM</a></div>")
-                ),
-                
-                extensions =c ('ColReorder', 'Buttons', 'FixedHeader'),
-                
-                options = list(
-                  fixedHeader = FALSE,
-                  columnDefs = list(list(className = 'dt-center', targets = "_all")),   
-                  dom = 'Blfrtip',   
-                  buttons = 
-                    list(
-                      extend = 'collection',
-                      buttons = c('csv', 'pdf'),
-                      text = 'Download'
-                    ),
-                  orderClasses = F,
-                  scrollX = TRUE,
-                  pageLength = 5, lengthMenu = c(5, nrow(dataEpi1)),
-                  colReorder = TRUE,
-                  initComplete = JS(
-                    "function(settings, json) {",
-                    "$(this.api().table().header()).css({'background-color': 'rgb(95, 95, 99)', 'padding-left' : '0px', 'color': '#fff', 'width' : 'auto !important'});",
-                    "$(this.api().table().body()).css({'padding-left' : '0px', 'width' : 'auto'});",
-                    "}")
-                ))
-    
-  } else {
-    shinyjs::alert(paste("The model did not find putative Regulatory Elements that are associated with", gene, "in Epiregio server"))
-  }
+
+
+output$epiregio1 <- DT::renderDT({
   
-})
+  
+ # shiny::validate(
+  #  need(!is.null(input$selectHSGenesEpi), 'Processing...')
+    
+  #)
+  if (!is.null(input$selectHSGenesEpi)) {
+  gene = outGeneForEpiregio()
+  #DT::DTOutput("tabepiregio1")
+  #data=dataEpiregio()
+  load(paste0("External/Data/Epiregio/", gene, ".RData"))
+  
+ 
+  
+    ####################################
+    #########################################
+    ##########################################
+    ############################################
+    #output$tabepiregio1 <- DT::renderDT({ 
+  
+      dataEpi1 = data[,3:12]
+      
+      
+      
+      dataEpi1$'Predicted Function' = ifelse(dataEpi1$regressionCoefficient > 0, "Activator", "Repressor")
+      
+      for (i in 1:nrow(dataEpi1)) {
+        dataEpi1$CREMID[i] = ifelse(dataEpi1$CREMID[i]=="No CREM", "No CREM", paste0("<a href=", paste0('https://epiregio.de/cluster/',dataEpi1$CREMID[i]),
+                                                                                     " target='_blank'>",dataEpi1$CREMID[i],"</a>"))
+      }
+      
+      dataEpi1 = arrange(dataEpi1, desc(normModelScore))[,c(1,11,3,4,9,10)]
+      
+      colnames(dataEpi1)= c("REM ID", "Predicted Function", "REM Start", "REM End", "CREM ID", "Model Score")
+      
+      
+      
+      DT::datatable(dataEpi1, rownames = FALSE, escape = FALSE, class = 'cell-border stripe',
+                    
+                    caption = htmltools::tags$caption(
+                      style = 'caption-side: top; text-align: left; color: black; font-family: "Proxima Nova"', HTML(paste("This table shows the Regulatory Elements (REMs) associated to", gene, ", their Predicted function, the Model score and the REM cluster (CREM) it is belonging to."))
+                      #paste0("abc", "<div><a id='inf'>RPKM</a></div>")
+                    ),
+                    
+                    extensions =c ('ColReorder', 'Buttons', 'FixedHeader'),
+                    
+                    options = list(
+                      fixedHeader = FALSE,
+                      columnDefs = list(list(className = 'dt-center', targets = "_all")),   
+                      dom = 'Blfrtip',   
+                      buttons = 
+                        list(
+                          extend = 'collection',
+                          buttons = c('csv', 'pdf'),
+                          text = 'Download'
+                        ),
+                      orderClasses = F,
+                      scrollX = TRUE,
+                      pageLength = 5, lengthMenu = c(5, nrow(dataEpi1)),
+                      colReorder = TRUE,
+                      initComplete = JS(
+                        "function(settings, json) {",
+                        "$(this.api().table().header()).css({'background-color': 'rgb(95, 95, 99)', 'padding-left' : '0px', 'color': '#fff', 'width' : 'auto !important'});",
+                        "$(this.api().table().body()).css({'padding-left' : '0px', 'width' : 'auto'});",
+                        "}")
+                    ))
+  }# end of if (!is.null(input$selectHSGenesEpi)) {
+    })
+
+    #########################################
+    ########################################
+    ######################################
+    
+   #DT::DTOutput("tabepiregio1")
+    
+    
+    
+  #} #else {
+  #  
+   # HTML(paste("<h3>No data available for", gene, "in", "<a href='https://epiregio.de/' target='_blank'>Epiregio server</a> </h3>"))
+    
+  #}
+  
+  
+  
+#})
 
 
 ########################
 ##############################
 
-output$epiregio2 <- renderUI({
+output$epiregio2 <- DT::renderDT({
   
+  shiny::validate(
+    need(!is.null(input$selectHSGenesEpi), 'Processing...')
+    
+  ) 
   gene = outGeneForEpiregio()
   
-  data=dataEpiregio()
+  #data=dataEpiregio()
+  load(paste0("External/Data/Epiregio/", gene, ".RData"))
   
-  if (nrow(dataEpiregio())>0) {
-    
-output$tabepiregio2 <- DT::renderDT({ 
+  #if (nrow(dataEpiregio())>0) {
 
+#output$tabepiregio2 <- DT::renderDT({ 
+ 
   
   ################ Regulatory Elements cell-specific predicted function ########################
   x1='<a  data-toggle="tooltip" '
@@ -1200,20 +1281,21 @@ output$tabepiregio2 <- DT::renderDT({
                     "$(this.api().table().body()).css({'padding-left' : '0px', 'width' : 'auto'});",
                     "}")
                 ))
-  
+  #}#if (!is.null(input$selectUIEpi)) {
 })
   
-  DT::DTOutput("tabepiregio2")
+  
+ # DT::DTOutput("tabepiregio2")
   
   
   
-} else {
+#} else {
   
- HTML(paste("<h3>No data available for", gene, "in", "<a href='https://epiregio.de/' target='_blank'>Epiregio server</a> </h3>"))
+ #HTML("<h3></h3>")
   
-  }
+  #}
 
 
 
-  })#renderUI End
+  #})#renderUI End
 

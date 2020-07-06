@@ -13,6 +13,20 @@
 }
 
 
+.shiny-output-error-validation {
+  color: blue !important;
+  text-align: center !important;
+  font-weight: 700 !important;
+  
+}
+
+.shiny-output-error {
+  margin: auto !important;
+}
+
+.tab-content > .tab-pane {
+  min-height: 300px;
+}
 
 #footer {
     
