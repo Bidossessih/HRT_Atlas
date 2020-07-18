@@ -12,25 +12,43 @@ function(input, output, session, clientData) {
   
   output$uihousekeeping <- renderUI(tagList(
     
-    fluidPage(style="padding-left: 0px;padding-right: 0px;"#,
-              #fluidRow(includeHTML("www/mainpage.html"))
-              ),
-    uiOutput("pageHousekeeping", style="margin-left: 10px;margin-right: 10px;")
+    
+    
+    htmlTemplate(paste0("www/HTML/", fname),
+                 #Results page to html template
+                 homePageHumanResult = source("External/homePageHumanResult.R", local=TRUE)[1],
+                 homePageMouseResult = source("External/homePageMouseResult.R", local=TRUE)[1],
+                 modifiers = source("External/modifiersUI.R", local=TRUE)[1],
+                 visualizationHuman = source("External/visualizationUI.R", local=TRUE)[1],
+                 visualizationMouse = source("External/visualizationMouseUI.R", local=TRUE)[1]
+    )
     
     )                                          
   )
   
   # load server code for page specified in URL
-  validFiles = c( list.files("External")                          # valid files must be hardcoded here
+  validFiles = c( list.files("www/HTML")                          # valid files must be hardcoded here
+  )
+  
+  validFiles2 = c( list.files("External/ServerCode")                          # valid files must be hardcoded here
                  )                     #    for security (use all lower-case
   #    names to prevent Unix case problems)
   fname = isolate(session$clientData$url_search)       # isolate() deals with reactive context
   if(nchar(fname)==0) { fname = "?homePageGlobal" }              # blank means home page
-  fname = paste0(substr(fname, 2, nchar(fname)), ".R") # remove leading "?", add ".R"
+  fname = paste0(substr(fname, 2, nchar(fname)), ".html") # remove leading "?", add ".R"
   
   cat(paste0("Session filename: ", fname, ".\n"))      # print the URL for this session
   
-  if(!fname %in% validFiles){                          # is that one of our files?
+  
+  if (gsub("html", "R", fname) %in% validFiles2) {
+    cat("reponse: ", paste0("External/ServerCode", gsub("html", "R", fname)), "\n")
+    source(paste0("External/ServerCode/", gsub("html", "R", fname)), local=TRUE)                            # load and run server code for this page
+  }
+  cat(paste0("Filename: ", fname, ".\n"))
+  cat("line 47", "\n")
+  
+  
+  if(!fname %in% validFiles2){                          # is that one of our files?
     output$pageHousekeeping <- renderUI(tagList(              # 404 if no file with that name
       fluidRow(
         column(5,
@@ -41,23 +59,9 @@ function(input, output, session, clientData) {
     ))
     return()    # to prevent a "file not found" error on the next line after a 404 error
   }
-  source(paste0("External/",fname), local=TRUE)                            # load and run server code for this page
   
-  # Add code to head tag
-  #fname2 = gsub(".R", "H.R", fname)
-  #output$outx <- renderPrint(fname2)
   
-  #User head tag as selector
-  #if (nchar(fname2)!=0) {
-   # singleton(insertUI("head", "afterBegin",
-    #         source(paste0("External/headCode/", fname2))[1]))
-    #}
   
 }
-
-
-#########################################
-#######################################
-
 
 

@@ -61,9 +61,9 @@
 
 
 <nav class="navbar navbar-expand-md navbarStyle navbar-light" style="width:100%;">
-  <a class="navbar-brand logoviz" href="http://www.housekeeping.unicamp.br/?homePageGlobal">
+  <a class="navbar-brand logoviz" href="?homePageGlobal">
     <img src="LogoHKNav2.png" alt="Logo" class="d-inline-block align-center logowidth"> <span
-      style="text-align:center; font-weight: bold">Housekeeping and Reference Transcript Atlas</span>
+      style="text-align:center; font-weight: bold">Housekeeping Transcript Atlas</span>
   </a>
 
   <button class="navbar-toggler hidden-md-up float-md-right" type="button" data-toggle="collapse"
@@ -73,15 +73,14 @@
   <div class="collapse navbar-collapse navbar-toggleable-sm navbarcustom" id="collapsibleNavbar">
     <ul class="nav navbar-nav">
       <li class="nav-item">
-        <a class="nav-link" href="http://www.housekeeping.unicamp.br/?homePageGlobal">Home</a>
+        <a class="nav-link" href="?homePageGlobal">Home</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="http://www.housekeeping.unicamp.br/?about">About</a>
+        <a class="nav-link" href="?about">About</a>
       </li>
 
       <li class="nav-item">
-        <a class="nav-link" href="http://www.housekeeping.unicamp.br/?download"
-          onclick="ga('send', 'event', 'Menu', 'access', 'Download');">Downloads</a>
+        <a class="nav-link" href="?download" onclick="ga('send', 'event', 'Menu', 'access', 'Download');">Downloads</a>
       </li>
 
       <li class="nav-item dropdown">
@@ -90,22 +89,18 @@
           Gene expression
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" href="http://www.housekeeping.unicamp.br/?visualization" style="text-align:justify"
-            onclick="ga('send', 'event', 'Menu', 'access', 'Visualize Human');">Human housekeeping genes expression
-            <br>
+          <a class="dropdown-item" href="?visualization" style="text-align:justify"
+            onclick="ga('send', 'event', 'Menu', 'access', 'Visualize Human');">Human housekeeping genes expression <br>
             in different tissues</a>
-          <a class="dropdown-item" href="http://www.housekeeping.unicamp.br/?visualizationMouse"
-            style="text-align:justify" onclick="ga('send', 'event', 'Menu', 'access', 'Visualize Mouse');">Mouse
-            housekeeping genes expression
-            <br>
+          <a class="dropdown-item" href="?visualizationMouse" style="text-align:justify"
+            onclick="ga('send', 'event', 'Menu', 'access', 'Visualize Mouse');">Mouse housekeeping genes expression <br>
             in different tissues</a>
 
         </div>
       </li>
 
       <li class="nav-item">
-        <a class="nav-link" href="http://www.housekeeping.unicamp.br/?modifiers"
-          onclick="ga('send', 'event', 'Menu', 'access', 'Modifiers');">Expression
+        <a class="nav-link" href="?modifiers" onclick="ga('send', 'event', 'Menu', 'access', 'Modifiers');">Expression
           Modifiers</a>
       </li>
 
@@ -157,20 +152,16 @@
             <tr class="fontthead">
               <td>Housekeeping transcripts</td>
               <td>List of human transcripts expressed across 52 tissues and cells types.</td>
-              <td><a href="http://www.housekeeping.unicamp.br/Housekeeping_TranscriptsHuman.csv"
-                  target="_blank">CSV</a><br><br><a
-                  href="http://www.housekeeping.unicamp.br/Housekeeping_TranscriptsHuman.RData" target="_blank">.RData
-                  file</a></td>
+              <td><a href="Housekeeping_TranscriptsHuman.csv" target="_blank">CSV</a><br><br><a
+                  href="Housekeeping_TranscriptsHuman.RData" target="_blank">.RData file</a></td>
 
             </tr>
 
             <tr class="fontthead">
               <td>Housekeeping genes</td>
               <td>List of human genes stably expressed across 52 tissues and cells types.</td>
-              <td><a href="http://www.housekeeping.unicamp.br/Housekeeping_GenesHuman.csv"
-                  target="_blank">CSV</a><br><br><a
-                  href="http://www.housekeeping.unicamp.br/Housekeeping_GenesHuman.RData" target="_blank">.RData
-                  file</a></td>
+              <td><a href="Housekeeping_GenesHuman.csv" target="_blank">CSV</a><br><br><a
+                  href="Housekeeping_GenesHuman.RData" target="_blank">.RData file</a></td>
 
 
             </tr>
@@ -179,22 +170,21 @@
               <td>Most stable transcripts</td>
               <td>This list shows 20 transcripts stably expressed across all of the 52 tissues and cells types. They can
                 be validated in any cell/tissue not available in the human database.</td>
-              <td><a href="http://www.housekeeping.unicamp.br/MostStable.csv" target="_blank">CSV</a></td>
+              <td><a href="MostStable.csv" target="_blank">CSV</a></td>
 
             </tr>
 
             <tr class="fontthead">
               <td>Common genes</td>
               <td>This list shows the overlap of human and mouse housekeeping genes. 1130 genes were identified.</td>
-              <td><a href="http://www.housekeeping.unicamp.br/Human_Mouse_Common.csv" target="_blank">CSV</a><br><br><a
-                  href="Human_Mouse_Common.RData" target="_blank">.RData file</a></td>
+              <td><a href="Human_Mouse_Common.csv" target="_blank">CSV</a><br><br><a href="Human_Mouse_Common.RData"
+                  target="_blank">.RData file</a></td>
 
             </tr>
             <tr class="fontthead">
               <td>List of Primers</td>
               <td>This list shows the 31 primers proposed for the human reference genes database.</td>
-              <td><a href="http://www.housekeeping.unicamp.br/Validation/Primers_Table/Human_Primer_Validation.csv"
-                  target="_blank">CSV</a></td>
+              <td><a href="Validation/Primers_Table/Human_Primer_Validation.csv" target="_blank">CSV</a></td>
 
             </tr>
           </tbody>
@@ -221,10 +211,8 @@
             <tr class="fontthead">
               <td>Housekeeping transcripts</td>
               <td>List of mouse transcripts expressed across 14 tissues and cells types.</td>
-              <td><a href="http://www.housekeeping.unicamp.br/Housekeeping_TranscriptsMouse.csv"
-                  target="_blank">CSV</a><br><br><a
-                  href="http://www.housekeeping.unicamp.br/Housekeeping_TranscriptsMouse.RData" target="_blank">.RData
-                  file</a></td>
+              <td><a href="Housekeeping_TranscriptsMouse.csv" target="_blank">CSV</a><br><br><a
+                  href="Housekeeping_TranscriptsMouse.RData" target="_blank">.RData file</a></td>
 
             </tr>
 
@@ -233,25 +221,22 @@
               <td>List of mouse genes with at least one of their transcripts expressed across 14 tissues and cells
                 types.
               </td>
-              <td><a href="http://www.housekeeping.unicamp.br/Housekeeping_GenesMouse.CSV"
-                  target="_blank">CSV</a><br><br><a
-                  href="http://www.housekeeping.unicamp.br/Housekeeping_Genes_Mouse.RData" target="_blank">.RData
-                  file</a></td>
+              <td><a href="Housekeeping_GenesMouse.CSV" target="_blank">CSV</a><br><br><a
+                  href="Housekeeping_Genes_Mouse.RData" target="_blank">.RData file</a></td>
             </tr>
 
             <tr class="fontthead">
               <td>Most stable transcripts</td>
               <td>This list shows 22 transcripts stably expressed across all of the 14 tissues and cells types. They can
                 be validated in any cell/tissue not available in the mouse database.</td>
-              <td><a href="http://www.housekeeping.unicamp.br/MostStable_Mouse.csv" target="_blank">CSV</a></td>
+              <td><a href="MostStable_Mouse.csv" target="_blank">CSV</a></td>
 
             </tr>
 
             <tr class="fontthead">
               <td>List of Primers</td>
               <td>This list shows the 17 primers proposed for the mouse reference genes database.</td>
-              <td><a href="http://www.housekeeping.unicamp.br/Validation/Primers_Table/Mouse_Primer_Validation.csv"
-                  target="_blank">CSV</a></td>
+              <td><a href="Validation/Primers_Table/Mouse_Primer_Validation.csv" target="_blank">CSV</a></td>
 
             </tr>
           </tbody>

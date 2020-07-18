@@ -1,4 +1,9 @@
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
   <!--<script src="bootstrap.min.js"></script>
   <link rel="stylesheet" type="text/css" href="bootstrap.min.css" />-->
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"
@@ -18,7 +23,7 @@
   <link rel="stylesheet" type="text/css" href="mystyle.css" />
 
 
-  <title>HRT Atlas: Housekeeping genes and Transcripts</title>
+  <title>HRT Atlas: Database of Housekeeping Genes and Reference Genes/Transcripts</title>
   <meta name="Description"
     content="Human and mouse candidate reference transcripts/genes for qPCR normalization. Suitable tissue specific reference genes and efficient primers." />
 
@@ -69,7 +74,7 @@
 <body>
 
   <nav class="navbar navbar-expand-md navbarStyle navbar-light" style="width:100%;">
-    <a class="navbar-brand logoviz" href="?homePageGlobal">
+    <a class="navbar-brand logoviz" href="http://www.housekeeping.unicamp.br/?homePageGlobal">
       <img src="LogoHKNav2.png" alt="Logo" class="d-inline-block align-center logowidth"> <span
         style="text-align:center; font-weight: bold">Housekeeping and Reference Transcript Atlas</span>
     </a>
@@ -81,14 +86,14 @@
     <div class="collapse navbar-collapse navbar-toggleable-sm navbarcustom" id="collapsibleNavbar">
       <ul class="nav navbar-nav">
         <li class="nav-item">
-          <a class="nav-link" href="?homePageGlobal">Home</a>
+          <a class="nav-link" href="http://www.housekeeping.unicamp.br/?homePageGlobal">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="?about">About</a>
+          <a class="nav-link" href="http://www.housekeeping.unicamp.br/?about">About</a>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link" href="?download"
+          <a class="nav-link" href="http://www.housekeeping.unicamp.br/?download"
             onclick="ga('send', 'event', 'Menu', 'access', 'Download');">Downloads</a>
         </li>
 
@@ -98,25 +103,28 @@
             Gene expression
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-            <a class="dropdown-item" href="?visualization" style="text-align:justify"
+            <a class="dropdown-item" href="http://www.housekeeping.unicamp.br/?visualization" style="text-align:justify"
               onclick="ga('send', 'event', 'Menu', 'access', 'Visualize Human');">Human housekeeping genes expression
-              <br> in different tissues</a>
-            <a class="dropdown-item" href="?visualizationMouse" style="text-align:justify"
-              onclick="ga('send', 'event', 'Menu', 'access', 'Visualize Mouse');">Mouse housekeeping genes expression
-              <br> in different tissues</a>
+              <br>
+              in different tissues</a>
+            <a class="dropdown-item" href="http://www.housekeeping.unicamp.br/?visualizationMouse"
+              style="text-align:justify" onclick="ga('send', 'event', 'Menu', 'access', 'Visualize Mouse');">Mouse
+              housekeeping genes expression
+              <br>
+              in different tissues</a>
 
           </div>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link" href="?modifiers" onclick="ga('send', 'event', 'Menu', 'access', 'Modifiers');">Expression
+          <a class="nav-link" href="http://www.housekeeping.unicamp.br/?modifiers"
+            onclick="ga('send', 'event', 'Menu', 'access', 'Modifiers');">Expression
             Modifiers</a>
         </li>
 
       </ul>
     </div>
   </nav>
-
   <!--Show dropdown menu on hover-->
   <script>
     $('ul.nav li.dropdown').hover(function () {
@@ -132,8 +140,14 @@
       <div class="mainboxStyle">
         <div id="home">
           <div style="width:100%; margin:auto">
-            <img src="housekeeping.jpg" style="width:33%;" />
+            <img src="housekeeping.jpg" alt="List of housekeeping genes and reference genes/transcripts"
+              style="width:33%;" />
           </div>
+          <br>
+          <h1 class="infotextdev" style="color:#444; text-align: center;">
+            HRT Atlas: Database of housekeeping genes and reference transcripts
+          </h1>
+
           <p class="infotextdev" style="margin-top: 2%;color:#444; text-align: center;">Tool to search human and mouse
             housekeeping and candidate reference genes/transcripts.
             <br>It also offers tissue and cell selective candidate reference transcripts and some primers for
@@ -143,16 +157,18 @@
 
           <p class="infotextdev" style="margin-top: 2%;color:#444">
             Click on Human or Mouse icon to display their search boxes.
-            <a href="?about">
+            <a href="http://www.housekeeping.unicamp.br/?about">
               <strong>Learn more</strong>
             </a>
           </p>
           <div class="icondiv">
             <div>
-              <a href="?homePageHuman" onclick="ga('send', 'event', 'link', 'access', 'Human Database');"><img
-                  src="humanWeb.gif" class="iconHuman"></a>
-              <a href="?homePageMouse" onclick="ga('send', 'event', 'link', 'access', 'Mouse Database');"><img
-                  src="mouseWeb.gif" class="iconMouse"></a>
+              <a href="http://www.housekeeping.unicamp.br/?homePageHuman"
+                onclick="ga('send', 'event', 'link', 'access', 'Human Database');"><img src="humanWeb.gif"
+                  alt="Best human housekeeping genes and reference genes/transcripts" class="iconHuman"></a>
+              <a href="http://www.housekeeping.unicamp.br/?homePageMouse"
+                onclick="ga('send', 'event', 'link', 'access', 'Mouse Database');"><img src="mouseWeb.gif"
+                  alt="Best mouse housekeeping genes and reference genes/transcripts" class="iconMouse"></a>
             </div>
           </div>
           <br>
@@ -166,10 +182,11 @@
                       style="width: 40px;"></td>
                   <td id="td2" style="text-align: justify;" class="col-xs-11"><span>Alternatively, you can visualize the
                       <strong>expression</strong> of individual </span>
-                    <a href="?visualization"><strong>Human</strong></a><span> or </span>
-                    <a href="?visualizationMouse">
+                    <a href="http://www.housekeeping.unicamp.br/?visualization"><strong>Human</strong></a><span> or
+                    </span>
+                    <a href="http://www.housekeeping.unicamp.br/?visualizationMouse">
                       <strong>Mouse</strong></a><span> candidate reference transcripts and housekeeping
-                      genes/transcripts, and potential <a href="?modifiers"
+                      genes/transcripts, and potential <a href="http://www.housekeeping.unicamp.br/?modifiers"
                         onclick="ga('send', 'event', 'link', 'access', 'Modifiers');"><strong>modifiers</strong></a> of
                       its expression.</span></td>
                 </tr>
@@ -186,13 +203,13 @@
               <br />
             </strong>
             HRT Atlas v1.0 database: redefining human and mouse housekeeping genes and candidate reference transcripts
-            by
-            mining massive RNA-seq datasets
+            by mining
+            massive RNA-seq datasets
             <br />
-            Bidossessi Wilfried Hounkpe, Francine Chenou, Franciele Lima, Erich Vinicius de Paula
+            Bidossessi Wilfried Hounkpe, Francine Chenou, Franciele de Lima, Erich Vinicius De Paula
             <br />
-            bioRxiv 787150; <a href="https://doi.org/10.1101/787150" target="_blank">doi:
-              https://doi.org/10.1101/787150</a>
+            <a href="https://doi.org/10.1093/nar/gkaa609" target="_blank"> Nucleic Acids Research, gkaa609, doi:
+              https://doi.org/10.1093/nar/gkaa609</a>
           </div>
         </div>
 
@@ -200,4 +217,43 @@
     </div>
   </div>
 
+  <script type="text/javascript" id="clustrmaps"
+    src="//cdn.clustrmaps.com/map_v2.js?cl=99bdcb&w=400&t=n&d=mQ8nzABJ0g61rk3xh1L1Gc-y0KuKimwtN-rRwJPAk-8&co=ffffff">
+    </script>
+
+  <!--Footer-->
+
+  <div id="footer" class="shadow-top">
+    <br />
+    <div class="col-xs-3 col-lg-2 footerdiv1">
+      <a href='https://www.unicamp.br' target='_blank'><img src='Unicamp.png' class='imageFooter'></a>
+      <a href='https://www.hemocentro.unicamp.br' target='_blank'><img src='Hemocentro.png'
+          class='imageFooter imageFooter1'></a>
+    </div>
+    <div class="col-xs-4 col-lg-5 bordst footerdiv">
+      <div sytle="margin:auto" class="footerdiv2">
+        Affiliation
+        <br />
+        University of Campinas
+        <br />
+        Laboratory of Hemostasis and Inflammation - LAHI
+        <br />
+        Hemocentro Campinas/Brazil
+      </div>
+    </div>
+    <div class="col-xs-4 col-lg-5 bordst footerdiv">
+      <div sytle="margin:auto" class="footerdiv2">
+        Contact
+        <br />
+        For questions, problems or suggestions, please send a mail to Bidossessi Wilfried: openbiotools@gmail.com
+      </div>
+      <br />
+      <a href='https://github.com/Bidossessih/HRT_Atlas' target='_blank'><img src='github.png'
+          style='width: 25px; float: right;'></a>
+    </div>
+
+  </div>
+
 </body>
+
+</html>

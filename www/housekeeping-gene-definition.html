@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+  <script src="bootstrap.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="bootstrap.min.css" />
+  <link rel="shortcut icon" type="image/x-icon" href="LogoHK220X150.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" type="text/css" href="mystyle.css" />
+
+  <title>HRT Atlas | Definition of Housekeeping gene</title>
+  <meta name="Description" content="Redefining housekeeping gene." />
+
+  <meta itemprop="name" content="Housekeeping genes database" />
+  <meta itemprop="description" content="A housekeeping gene is a single 
+  constitutive gene that expresses at least one of its
+protein-coding transcripts at a non-zero expression level,
+with low variability, which may either, be constitutively ex-
+pressed in all or in a subset of tissues." />
+
+  <meta itemprop="image" content="pipeline2.png" />
+  <link rel="publisher" href="https://plus.google.com/+www.housekeeping.unicamp.br" />
+  <meta property="og:url" content="www.housekeeping.unicamp.br" />
+  <meta property="og:site_name" content="Housekeeping genes database" />
+  <meta property="og:description" content="A housekeeping gene is a single 
+  constitutive gene that expresses at least one of its
+protein-coding transcripts at a non-zero expression level,
+with low variability, which may either, be constitutively ex-
+pressed in all or in a subset of tissues." />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="pipeline2.png" />
+  <meta name="twitter:url" content="www.housekeeping.unicamp.br" />
+  <meta name="twitter:title" content="Housekeeping genes database" />
+  <meta name="twitter:description" content="A housekeeping gene is a single 
+  constitutive gene that expresses at least one of its
+protein-coding transcripts at a non-zero expression level,
+with low variability, which may either, be constitutively ex-
+pressed in all or in a subset of tissues." />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:image" content="pipeline2.png" />
+  <meta name="twitter:creator" content="@BidossessiH" />
+  <meta name="author" content="Bidossessi Wilfried Hounkpe" />
+  <meta name="robots" content="index" />
+  <meta name="google-site-verification" content="DGWLR3MQZ2V6rHusJy1Hb_VWOqUcVCFqv1aNGNOvmiQ" />
+  <script src="https://www.googletagmanager.com/gtag/js?id=UA-137785214-1">async</script>
+
+  <!--Global site tag (gtag.js) - Google Analytics -->
+  <script>
+
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'UA-137785214-1');
+  </script>
+
+</head>
+
+
+<body>
+
+
+
+  <nav class="navbar navbar-expand-md navbarStyle navbar-light" style="width:100%;">
+    <a class="navbar-brand logoviz" href="http://www.housekeeping.unicamp.br/?homePageGlobal">
+      <img src="LogoHKNav2.png" alt="Logo" class="d-inline-block align-center logowidth"> <span
+        style="text-align:center; font-weight: bold">Housekeeping and Reference Transcript Atlas</span>
+    </a>
+
+    <button class="navbar-toggler hidden-md-up float-md-right" type="button" data-toggle="collapse"
+      data-target="#collapsibleNavbar">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse navbar-toggleable-sm navbarcustom" id="collapsibleNavbar">
+      <ul class="nav navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="http://www.housekeeping.unicamp.br/?homePageGlobal">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="http://www.housekeeping.unicamp.br/?about">About</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="http://www.housekeeping.unicamp.br/?download"
+            onclick="ga('send', 'event', 'Menu', 'access', 'Download');">Downloads</a>
+        </li>
+
+
+
+      </ul>
+    </div>
+  </nav>
+
+  <!--Show dropdown menu on hover-->
+  <script>
+    $('ul.nav li.dropdown').hover(function () {
+      $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeIn(500);
+    }, function () {
+      $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeOut(500);
+    });
+
+  </script>
+
+  <div class="container">
+    <br>
+    <img src="pipeline2.png" style="width: 100%;" alt="Definition of housekeeping genes">
+
+
+    <br>
+    <br>
+    <h1>HRT Atlas: Definition of housekeeping genes</h1>
+    <br>
+    <p class="text-justify">Conventional definitions of housekeeping gene
+      failed to consider alternative splicing, a fundamental aspect of
+      transcriptome complexity.
+      As genes may have one or more isoforms variably expressed
+      across tissues, instead of the one gene, one polypeptide
+      concept, it is possible that one gene stably expresses one
+      transcript in a set of tissues or cells, and another transcript
+      in other sets of tissues. Therefore, we propose that
+      a refined definition of housekeeping gene should be formulated as:
+      <b><em>a single constitutive gene that expresses at least one of its
+          protein-coding transcripts at a non-zero expression level,
+          with low variability, which may either, be constitutively expressed
+          in all or in a subset of tissues.
+        </em></b>
+    </p>
+
+    <p class="text-justify">
+      Any transcript of a housekeeping gene, that is also constitutively
+      expressed across all tissues can be referred to as a <b><em>housekeeping transcript</em></b>.
+      Following the standardization of qPCR terminology provided by the
+      minimum information for publication of quantitative real-
+      time PCR experiments (MIQE) guidelines, genes used
+      for normalization should be referred to as reference genes,
+      not as housekeeping genes. Accordingly, we use the term <b><em>reference
+          transcript</em></b> in HRT Atlas to define transcripts that are suitable for qPCR
+      normalization (i.e. fulfill the criteria of housekeeping transcript and
+      are stably expressed in the specific experimental condition or tissue of interest).
+    </p>
+    <br>
+
+    <div class="citation">
+      <strong>
+        Please acknowledge Housekeeping and Reference Transcript Atlas in your publications by citing the
+        following reference:
+        <br />
+      </strong>
+      HRT Atlas v1.0 database: redefining human and mouse housekeeping genes and candidate reference transcripts
+      by mining
+      massive RNA-seq datasets
+      <br />
+      Bidossessi Wilfried Hounkpe, Francine Chenou, Franciele de Lima, Erich Vinicius De Paula
+      <br />
+      <a href="https://doi.org/10.1093/nar/gkaa609" target="_blank"> Nucleic Acids Research, gkaa609, doi:
+        https://doi.org/10.1093/nar/gkaa609</a>
+    </div>
+  </div>
+
+
+  <script>
+    $(document).ready(function () {
+      $('[data-toggle="tooltip"]').tooltip();
+    });
+  </script>
+
+  <script>
+    $('.collapse').collapse({ toggle: false })
+  </script>
+
+</body>
+
+</html>

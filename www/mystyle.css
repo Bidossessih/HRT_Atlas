@@ -1136,3 +1136,17 @@ display: inline-block;
   margin-left: 50px;
   margin-right: 0px;
 }
+
+.h1, h1 {
+  font-size: 1.5rem;
+  color: #444 !important;
+  font-weight: bolder !important;
+}
+
+@media only screen and (max-width:767px) {
+    .h1, h1 {
+    font-size: 1.25rem;
+    color: #444 !important;
+    font-weight: bolder !important;
+  }
+}

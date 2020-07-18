@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"> 
   <url>
-    <loc>http://www.housekeeping.unicamp.br/</loc>
+    <loc>http://www.housekeeping.unicamp.br/homePageGlobal.html</loc>
     <lastmod>2020-07-14</lastmod>
   </url>
 
@@ -10,16 +10,7 @@
     <lastmod>2020-07-14</lastmod>
   </url>
 
-  <url>
-    <loc>http://www.housekeeping.unicamp.br/?homePageHuman</loc>
-    <lastmod>2020-07-14</lastmod>
-  </url>
-
-  <url>
-    <loc>http://www.housekeeping.unicamp.br/?homePageMouse</loc>
-    <lastmod>2020-07-14</lastmod>
-  </url>
-
+  
   <url>
     <loc>http://www.housekeeping.unicamp.br/?download</loc>
     <lastmod>2020-07-14</lastmod>

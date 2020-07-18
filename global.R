@@ -14,13 +14,13 @@ library(dplyr)
 library(ggplot2)
 library(RSQLite)
 
-con <- dbConnect(RSQLite::SQLite(), "~/Repository/Housekeeping and Reference Transcript Atlas/db/LogMCF_Housekeeping_human_mouse.sqlite")
+#con <- dbConnect(RSQLite::SQLite(), "~/Repository/Housekeeping and Reference Transcript Atlas/db/LogMCF_Housekeeping_human_mouse.sqlite")
 
-con1 <- dbConnect(RSQLite::SQLite(), "~/Repository/Housekeeping and Reference Transcript Atlas/db/MCF_Housekeeping_Mouse_mouse.sqlite")
+#con1 <- dbConnect(RSQLite::SQLite(), "~/Repository/Housekeeping and Reference Transcript Atlas/db/MCF_Housekeeping_Mouse_mouse.sqlite")
 
-#con <- dbConnect(RSQLite::SQLite(), "/srv/shiny-server/housekeepingAtlas/db/LogMCF_Housekeeping_human_mouse.sqlite")
+con <- dbConnect(RSQLite::SQLite(), "/srv/shiny-server/housekeepingAtlas/db/LogMCF_Housekeeping_human_mouse.sqlite")
 
-#con1 <- dbConnect(RSQLite::SQLite(), "/srv/shiny-server/housekeepingAtlas/db/MCF_Housekeeping_human_mouse.sqlite")
+con1 <- dbConnect(RSQLite::SQLite(), "/srv/shiny-server/housekeepingAtlas/db/MCF_Housekeeping_human_mouse.sqlite")
 
 
 load("www/Housekeeping_TranscriptsMouse.RData")
@@ -76,5 +76,10 @@ svgico2 = '><path d="m386.136719 430.289062-115.097657-207.175781v-11.113281h-45
 ############### Load gene for epiregio REM computation
 
 load("External/Data/Epiregio/EpiRegio_Gene_HRTAtlas.RData")
+
+###################### Load mouse HK genes
+load("www/Housekeeping_Genes_Mouse.RData")
+colnames(Mouse_HK_genes)[2]="Ensembl"
+Mouse_HK_genes = mutate(Mouse_HK_genes, choice=paste0(Gene, " ", "(", Ensembl, ")"))
 
                             

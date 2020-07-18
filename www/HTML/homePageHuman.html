@@ -1,6 +1,9 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  {{ headContent() }}
 
   <script src="bootstrap.min.js"></script>
   <link rel="stylesheet" type="text/css" href="bootstrap.min.css" />
@@ -278,98 +281,27 @@
             <br />
           </strong>
           HRT Atlas v1.0 database: redefining human and mouse housekeeping genes and candidate reference transcripts
-          by
-          mining massive RNA-seq datasets
+          by mining
+          massive RNA-seq datasets
           <br />
-          Bidossessi Wilfried Hounkpe, Francine Chenou, Franciele Lima, Erich Vinicius de Paula
+          Bidossessi Wilfried Hounkpe, Francine Chenou, Franciele de Lima, Erich Vinicius De Paula
           <br />
-          bioRxiv 787150; <a href="https://doi.org/10.1101/787150" target="_blank">doi:
-            https://doi.org/10.1101/787150</a>
+          <a href="https://doi.org/10.1093/nar/gkaa609" target="_blank"> Nucleic Acids Research, gkaa609, doi:
+            https://doi.org/10.1093/nar/gkaa609</a>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Button trigger modal 
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalScrollable">
-    Launch demo modal
-</button>
--->
-  <!-- Modal 
-<div class="modal fade bd-example-modal-lg" id="exampleModalScrollable" tabindex="-1" role="dialog"
-  aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalScrollableTitle"></h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="container">
-          <div class="row">
-
-            <div id="standValId" class="col-11 html-widget-output shiny-bound-output">
-              <img src="Validation/Human_AMFR.PNG">
-
-            </div>
-            <div id="meltValId" class="col-11 html-widget-output shiny-bound-output">
-              <img src="">
-
-            </div>
-
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-
-      </div>
-    </div>
-  </div>
-</div>
--->
-
-  <!--<script src="bootstrap.min.js"></script>
-  <script src="shared/jquery.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="bootstrap.min.css" />-->
-
-  <!--
-<script>
-  function myModal() {
-    
-    var Gene = $(this).data("filter").toUpperCase();
-    console.log(Gene)
-    document.getElementById("exampleModalScrollableTitle").innerHTML = "Gene";
-  }
-</script>
+  <!--*****************************************-->
+  <!--*****************************************-->
+  <!--******************Results***********************-->
+  <!--*****************************************-->
+  {{homePageHumanResult}}
+  <br>
+  <br>
 
 
-<script>
-
-  $(document).ready(jQuery.noConflict();
-  function () {
-
-    $("svg").click(function () {
-      console.log("Gene:");
-
-      var Gene = $(this).data("filter").toUpperCase();
-      console.log("Gene:", Gene);
-      //document.getElementById("exampleModalScrollableTitle").innerHTML = Gene;
-      var standVal = "Validation/Human_" + Gesne + ".PNG";
-
-      var meltVal = "Validation/Melt_Human_" + Gene + ".jpg";
-
-      $("#standValId img").attr("src", standVal);
-
-      $("#meltValId img").attr("src", meltVal);
-
-
-    });
-  });
-</script>
--->
   <!--Show dropdown menu on hover-->
   <script>
     $('ul.nav li.dropdown').hover(function () {
