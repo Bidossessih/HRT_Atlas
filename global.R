@@ -14,9 +14,10 @@ library(dplyr)
 library(ggplot2)
 library(RSQLite)
 
-#con <- dbConnect(RSQLite::SQLite(), "~/Repository/Housekeeping and Reference Transcript Atlas/db/LogMCF_Housekeeping_human_mouse.sqlite")
 
-#con1 <- dbConnect(RSQLite::SQLite(), "~/Repository/Housekeeping and Reference Transcript Atlas/db/MCF_Housekeeping_Mouse_mouse.sqlite")
+#con <- dbConnect(RSQLite::SQLite(), "~/Repository/HRT_Atlas_db/LogMCF_Housekeeping_human_mouse.sqlite")
+
+#con1 <- dbConnect(RSQLite::SQLite(), "~/Repository/HRT_Atlas_db/MCF_Housekeeping_Mouse_mouse.sqlite")
 
 con <- dbConnect(RSQLite::SQLite(), "/srv/shiny-server/housekeepingAtlas/db/LogMCF_Housekeeping_human_mouse.sqlite")
 

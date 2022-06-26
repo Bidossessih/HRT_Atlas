@@ -322,7 +322,7 @@ output$tabHK <- renderUI({
 ############# Display designed primers table ####################
 
 output$tabRef <- renderUI({
-  if(input$tabsetID=="spec_primer"){
+  #if(input$tabsetID=="spec_primer"){
     # Reference table from rective "mouseRefTable"
     
     hk = mouseRefTable()
@@ -582,7 +582,7 @@ output$tabRef <- renderUI({
         ############# Display designed primers table ####################
         
         output$tabRef <- renderUI({
-          if(input$tabsetID=="spec_primer"){
+          #if(input$tabsetID=="spec_primer"){
             # Reference table from rective "mouseRefTable"
             
             hk = mouseRefTable()
@@ -671,7 +671,7 @@ output$tabRef <- renderUI({
               shinyjs::alert("No primer available with this filtering criteria.")
               
             }
-          }
+         # }
           
         })# End of reactive primer table
         
@@ -745,7 +745,7 @@ output$tabRef <- renderUI({
       shinyjs::alert("No primer available with this filtering criteria.")
       
     }
-  }
+  #} #End of if(input$tabsetID=="spec_primer")
   
 })# End of reactive primer table
 
@@ -767,7 +767,7 @@ refPop <-HTML('<a  data-toggle="tooltip" title="Suitable reference transcripts f
 ############### Render selectInput from server side ###########
 outGeneName <- reactive({
   
-  if(input$tabsetID=="Validation"){
+  #if(input$tabsetID=="Validation"){
     # Reference table from rective "mouseRefTable"
     
     hk = mouseRefTable()
@@ -795,7 +795,7 @@ outGeneName <- reactive({
       shinyjs::alert("No primer available with this filtering criteria.")
     }
     
-  }
+  #}
 })
 
 ############### SelectInput in server side ####
@@ -811,7 +811,7 @@ output$outxId <- renderPrint(length(outGeneName())==0)
 output$genenameVal <- renderUI({
   
   #if(
-  if(input$tabsetID=="Validation"){
+  #if(input$tabsetID=="Validation"){
     
     #rm(hk)
     
@@ -915,7 +915,7 @@ output$genenameVal <- renderUI({
           shinyjs::hide("sel2")
         }
     
-      }
+      #}
   
   })
 
@@ -930,7 +930,7 @@ outGeneForImg <- reactive({
 
 output$imageVal = renderUI({
   
-  if(input$tabsetID=="Validation"){
+  #if(input$tabsetID=="Validation"){
     
     
     
@@ -994,7 +994,7 @@ output$imageVal = renderUI({
     } else {
       shinyjs::alert("No primer available with this filtering criteria.")
     }
-    }
+    #}
 })
 
 

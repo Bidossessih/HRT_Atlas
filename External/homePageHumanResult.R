@@ -57,8 +57,7 @@ hidden(
             div(id = "sel1", style = "width: 100%;", uiOutput("selectUI")),
             
             
-            div(
-              id = "sel2",
+            div(id = "sel2",
               style = "width: 100%;",
               uiOutput('validatedPrimerSelectInput')
             ),

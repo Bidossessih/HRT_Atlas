@@ -21,6 +21,7 @@ observeEvent(input$tabsetID, {
   } 
 })
 
+
 observeEvent(input$tabsetID, {
   if (input$tabsetID=="refTranscr"){
     enable("mfc")
@@ -334,95 +335,104 @@ DT::DTOutput("mytabHkwapper")
 ############# Display designed primers table ####################
 
 output$tabRef <- renderUI({
-if(input$tabsetID=="spec_primer"){
-  # Reference table from rective "humanRefTable"
-  
-  hk = humanRefTable()
-  
-  table=gsub(" ", "_", input$search)
-  
-  
-  tab <- tab_echant[table,]
-  #########Test whether the filtering used by the user provide any reference transcript#######
-  
-  
-  if(class(hk)=="data.frame") {
+ # if(input$tabsetID=="spec_primer") {
+    # Reference table from rective "humanRefTable"
     
-output$mytabHkprimer <- DT::renderDT({ 
-  
-  
-  # primer table from rective "humanRefTable"
-  
-  data <- hk
-  
-  data <- na.omit(select(data, c("Rank","Ensembl","Gene.name")) %>% arrange(Rank))
-  
-  names(data) = c("Rank", "Transcript_ID", "Gene_name")
-  
-  dPrimer = na.omit(unique(merge(data[,1:2], humanPrimer, all.x = T, by = "Transcript_ID")))
-  
-  dPrimer = arrange(dPrimer, Rank)
-  
-  
-  #Popup of colnames
-  
-  rankPop <-'<a  data-toggle="tooltip" title="Transcript rank according to Reference Transcripts table.">Rank<img src="info.png" style="width: 10px;"></a>'
-  
-  
-  #rpkm <- HTML("<a href='https://www.ebi.ac.uk/training/online/glossary/rpkm'>RPKM</a>") #link of rpkm definition
-  colnames(dPrimer)[2] <- rankPop
-  
-  #svgico  ====> voir global.R
-  
-  dPrimer = dPrimer[, c(2,1,3:8)]
-  
-  #dPrimer = mutate(dPrimer, Validation=paste('<a class=" dt-center" data-toggle="modal" data-target="#exampleModalScrollable">', 
-   #                                          svgico1,"id=", Gene,"data-filter=", Gene, svgico2, "</a>"))
-  #dPrimer = dPrimer[, c(1,2,9,3:8)]
-
-  colnames(dPrimer)[c(2,8)] = c("Ensembl ID", "Amplicon length (bp)")
-  
-  DT::datatable(na.omit(dPrimer), rownames = FALSE, escape = FALSE, class = 'cell-border stripe',
-                
-                #caption = htmltools::tags$caption(
-                 # style = 'caption-side: top; text-align: left; color: black; font-family: "Proxima Nova"', "We manually designed some transcript specific primers that can be used in your experiments. The temperature calculations are done assuming 200 nM of annealing oligo concentration, 50mM of salt concentration (Na+) and 1.5 mM of divalent ion concentration (Mg++). We recommend using of at least two reference transcripts for normalization purpose."
-              #  ),
-                extensions =c ('ColReorder', 'Buttons', 'FixedHeader'),
-                
-                options = list(
-                  fixedHeader = FALSE,
-                  columnDefs = list(list(className = 'dt-center', targets = "_all")),   
-                  dom = 'Blfrtip',   
-                  buttons = 
-                    list('csv','pdf'), language = list(search = 'Filter:'),
-                     
-                  orderClasses = TRUE,
-                  scrollX = TRUE,
-                  pageLength = 5, lengthMenu = c(5, nrow(dPrimer)),
-                  colReorder = TRUE,
-                  initComplete = JS(
-                    "function(settings, json) {",
-                    "$(this.api().table().header()).css({'background-color': 'rgb(95, 95, 99)', 'color': '#fff'});",
-                    "}")
-                )) %>% formatStyle(
-                  colnames(dPrimer)[4],
-                  backgroundColor = styleInterval(50, c('#00ffe4', '#4fda4f')))
-  
-
-
-})
-
-############## Render reference table if filtering is not very restrictive or display alert#################
-DT::DTOutput("mytabHkprimer")
-
-
-
-} else {
-  
-  shinyjs::alert("No primer available with this filtering criteria.")
-  
-  }
-}
+    hk = humanRefTable()
+    
+    table = gsub(" ", "_", input$search)
+    
+    
+    tab <- tab_echant[table, ]
+    #########Test whether the filtering used by the user provide any reference transcript#######
+    
+    
+    if (class(hk) == "data.frame") {
+      output$mytabHkprimer <- DT::renderDT({
+        # primer table from rective "humanRefTable"
+        
+        data <- hk
+        
+        data <-
+          na.omit(select(data, c("Rank", "Ensembl", "Gene.name")) %>% arrange(Rank))
+        
+        names(data) = c("Rank", "Transcript_ID", "Gene_name")
+        
+        dPrimer = na.omit(unique(merge(
+          data[, 1:2], humanPrimer, all.x = T, by = "Transcript_ID"
+        )))
+        
+        dPrimer = arrange(dPrimer, Rank)
+        
+        
+        #Popup of colnames
+        
+        rankPop <-
+          '<a  data-toggle="tooltip" title="Transcript rank according to Reference Transcripts table.">Rank<img src="info.png" style="width: 10px;"></a>'
+        
+        
+        #rpkm <- HTML("<a href='https://www.ebi.ac.uk/training/online/glossary/rpkm'>RPKM</a>") #link of rpkm definition
+        colnames(dPrimer)[2] <- rankPop
+        
+        #svgico  ====> voir global.R
+        
+        dPrimer = dPrimer[, c(2, 1, 3:8)]
+        
+        #dPrimer = mutate(dPrimer, Validation=paste('<a class=" dt-center" data-toggle="modal" data-target="#exampleModalScrollable">',
+        #                                          svgico1,"id=", Gene,"data-filter=", Gene, svgico2, "</a>"))
+        #dPrimer = dPrimer[, c(1,2,9,3:8)]
+        
+        colnames(dPrimer)[c(2, 8)] = c("Ensembl ID", "Amplicon length (bp)")
+        
+        DT::datatable(
+          na.omit(dPrimer),
+          rownames = FALSE,
+          escape = FALSE,
+          class = 'cell-border stripe',
+          
+          #caption = htmltools::tags$caption(
+          # style = 'caption-side: top; text-align: left; color: black; font-family: "Proxima Nova"', "We manually designed some transcript specific primers that can be used in your experiments. The temperature calculations are done assuming 200 nM of annealing oligo concentration, 50mM of salt concentration (Na+) and 1.5 mM of divalent ion concentration (Mg++). We recommend using of at least two reference transcripts for normalization purpose."
+          #  ),
+          extensions = c ('ColReorder', 'Buttons', 'FixedHeader'),
+          
+          options = list(
+            fixedHeader = FALSE,
+            columnDefs = list(list(
+              className = 'dt-center', targets = "_all"
+            )),
+            dom = 'Blfrtip',
+            buttons =
+              list('csv', 'pdf'),
+            language = list(search = 'Filter:'),
+            
+            orderClasses = TRUE,
+            scrollX = TRUE,
+            pageLength = 5,
+            lengthMenu = c(5, nrow(dPrimer)),
+            colReorder = TRUE,
+            initComplete = JS(
+              "function(settings, json) {",
+              "$(this.api().table().header()).css({'background-color': 'rgb(95, 95, 99)', 'color': '#fff'});",
+              "}"
+            )
+          )
+        ) %>% formatStyle(colnames(dPrimer)[4],
+                          backgroundColor = styleInterval(50, c('#00ffe4', '#4fda4f')))
+        
+        
+        
+      })
+      
+      ############## Render reference table if filtering is not very restrictive or display alert#################
+      DT::DTOutput("mytabHkprimer")
+      
+      
+      
+    } else {
+      shinyjs::alert("No primer available with this filtering criteria.")
+      
+    }
+ # }
   
 })# End of reactive primer table
 
@@ -677,7 +687,7 @@ output$Mod3 <- DT::renderDT({
 ############### Render selectInput from server side ###########
 outGeneName <- reactive({
   
-  if(input$tabsetID=="Validation"){
+  #if(input$tabsetID=="Validation"){
   # Reference table from rective "humanRefTable"
   
   hk = humanRefTable()
@@ -706,7 +716,7 @@ outGeneName <- reactive({
     shinyjs::alert("No primer available with this filtering criteria.")
   }
   
-  }
+  #}
 })
 
 ############### SelectInput in server side ####
@@ -723,7 +733,7 @@ output$outxId <- renderPrint(!is.null(input$selectHSGenesEpi))
 output$genenameVal <- renderUI({
   
   #if(
-  if(input$tabsetID=="Validation"){
+  #if(input$tabsetID=="Validation"){
   
     #rm(hk)
   
@@ -826,7 +836,7 @@ output$genenameVal <- renderUI({
     shinyjs::hide("sel2")
   }
   
-  }
+  #}#End of if condition to that controle validation tab
   
 })
 
@@ -841,7 +851,7 @@ outGeneForImg <- reactive({
 
 output$imageVal = renderUI({
   
-  if(input$tabsetID=="Validation"){
+  #if(input$tabsetID=="Validation"){
     
   
     
@@ -905,7 +915,7 @@ output$imageVal = renderUI({
     } else {
       shinyjs::alert("No primer available with this filtering criteria.")
     }
-    }
+    #}
 })
 
 
