@@ -132,10 +132,11 @@ mouseRefTable <- reactive({
   if(input$mfc=="log"){
     #hk <- select(data, c("Ensembl","Gene", "Mean", "SD_of_log", "MCF_Log_Mean", "Max","Min","Log_MFC_min_and_mean"))
     hk <- hk %>% arrange(Log_MFC_min_and_mean) %>% mutate(RankMFC=1:nrow(hk))
+    hk <- hk %>% arrange(SD_of_log) %>% mutate(RankSD=1:nrow(hk))
     
     hk <- hk %>% arrange(desc(Mean)) %>% mutate(RankRPKM=1:nrow(hk)) 
     
-    hk <- hk %>% mutate(RankProd=RankMFC*RankRPKM) %>%  arrange(RankProd) %>% mutate(Rank=1:nrow(hk))
+    hk <- hk %>% mutate(RankProd=(RankMFC*RankRPKM*RankSD)**(1/3)) %>%  arrange(RankProd) %>% mutate(Rank=1:nrow(hk))
     
     
     
@@ -149,11 +150,11 @@ mouseRefTable <- reactive({
     if(nrow(hk)>0){
       
       hk <- hk %>% mutate(RankMFC=1:nrow(hk))
-      
+      hk <- hk %>% arrange(SD_of_log) %>% mutate(RankSD=1:nrow(hk))
       
       hk <- hk %>% arrange(desc(Mean)) %>% mutate(RankRPKM=1:nrow(hk)) 
       
-      hk <- hk %>% mutate(RankProd=RankMFC*RankRPKM) %>%  arrange(RankProd) %>% mutate(Rank=1:nrow(hk))
+      hk <- hk %>% mutate(RankProd=(RankMFC*RankRPKM*RankSD)**(1/3)) %>%  arrange(RankProd) %>% mutate(Rank=1:nrow(hk))
     } else {
       # This condition has only been used to make error mensage rending when user filter
       hk = vector(mode = "list")
@@ -506,7 +507,7 @@ output$tabRef <- renderUI({
             hk = filter(hk, Mean >= input$rpkm)
             
             
-            hk <- hk[, c(15,1:4,8:11)]
+            hk <- hk[, c(16,1:4,8:11)]
             
             hk[,3] <- paste0(paste0('<a href=https://www.genecards.org/cgi-bin/carddisp.pl?gene=',hk[,3], ' ' , 'target="_blank"'),'>',hk[,3], '</a>')
             
