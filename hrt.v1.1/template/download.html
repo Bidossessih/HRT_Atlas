@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  {{ headContent() }}
+
+  <link href="www/hrt.css.css" rel="stylesheet">
+
+  <link rel="shortcut icon" type="image/x-icon" href="www/images/LogoHK220X150.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+  <title>Download human and mouse housekeeping genes</title>
+  <meta name="Description"
+    content="Human and mouse candidate reference transcripts/genes for qPCR normalization. Suitable tissue specific reference genes and efficient primers." />
+
+  <meta itemprop="name" content="Housekeeping genes database" />
+  <meta itemprop="description" content="Human and mouse candidate reference transcripts/genes for qPCR normalization.
+    Users can search for the most suitable tissue specific reference genes (endogenous controls) and efficient primers to normalize their qPCR experiments.
+    Diseases and small molecules that can modify expression stability." />
+
+  <meta itemprop="image" content="www/images/pipeline2.png" />
+  <link rel="publisher" href="https://plus.google.com/+www.housekeeping.unicamp.br" />
+  <meta property="og:url" content="www.housekeeping.unicamp.br" />
+  <meta property="og:site_name" content="Housekeeping genes database" />
+  <meta property="og:description" content="Human and mouse candidate reference transcripts/genes for qPCR normalization.
+    Users can search for the most suitable tissue specific reference genes (endogenous controls) and efficient primers 
+    to normalize their qPCR experiments. Diseases and small molecules that can modify expression stability." />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="www/images/pipeline2.png" />
+  <meta name="twitter:url" content="www.housekeeping.unicamp.br" />
+  <meta name="twitter:title" content="Housekeeping genes database" />
+  <meta name="twitter:description" content="Human and mouse candidate reference transcripts/genes for qPCR normalization.
+    Users can search for the most suitable tissue specific reference genes (endogenous controls) and efficient primers to 
+    normalize their qPCR experiments. 
+    Diseases and small molecules that can modify expression stability." />
+
+  <meta name="twitter:accordion" content="summary" />
+  <meta name="twitter:image" content="pipeline2.png" />
+  <meta name="twitter:creator" content="@BidossessiH" />
+  <meta name="author" content="Bidossessi Wilfried Hounkpe" />
+  <meta name="robots" content="index" />
+
+  <meta property="og:site_name" content="OUP Academic">
+  <meta property="og:type" content="article">
+  <meta property="og:title"
+    content="HRT Atlas v1.0 database: redefining human and mouse housekeeping genes and candidate reference transcripts by mining massive RNA-seq datasets">
+  <meta property="og:description"
+    content="Abstract.  Housekeeping (HK) genes are constitutively expressed genes that are required for the maintenance of basic cellular functions. Despite their importanc">
+  <meta property="og:url" content="https://academic.oup.com/nar/article/doi/10.1093/nar/gkaa609/5871367">
+  <meta property="og:image" content="//oup.silverchair-cdn.com/UI/app/img/generic-cover.png">
+  <meta property="og:updated_time" content="2020-07-14">
+  <meta name="citation_author" content="Hounkpe, Bidossessi Wilfried">
+  <meta name="citation_author_institution"
+    content="School of Medical Sciences, University of Campinas, Campinas, SP, Brazil">
+  <meta name="citation_author" content="Chenou, Francine">
+  <meta name="citation_author_institution"
+    content="School of Medical Sciences, University of Campinas, Campinas, SP, Brazil">
+  <meta name="citation_author" content="de&nbsp;Lima, Franciele">
+  <meta name="citation_author_institution"
+    content="School of Medical Sciences, University of Campinas, Campinas, SP, Brazil">
+  <meta name="citation_author" content="De&nbsp;Paula, Erich Vinicius">
+  <meta name="citation_author_institution"
+    content="School of Medical Sciences, University of Campinas, Campinas, SP, Brazil">
+  <meta name="citation_author_institution"
+    content="Hematology and Hemotherapy Center, University of Campinas, Campinas, SP, Brazil">
+  <meta name="citation_title"
+    content="HRT Atlas v1.0 database: redefining human and mouse housekeeping genes and candidate reference transcripts by mining massive RNA-seq datasets">
+  <meta name="citation_doi" content="10.1093/nar/gkaa609">
+  <meta name="citation_journal_title" content="Nucleic Acids Research">
+  <meta name="citation_journal_abbrev" content="Nucleic Acids Res">
+ 
+  <meta name="citation_pdf_url"
+    content="https://academic.oup.com/nar/article-pdf/doi/10.1093/nar/gkaa609/33495304/gkaa609.pdf">
+  <meta name="description"
+    content="Abstract.  Housekeeping (HK) genes are constitutively expressed genes that are required for the maintenance of basic cellular functions. Despite their importanc">
+
+
+</head>
+
+
+  <nav class="navbar navbar-expand-lg navbar-style navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand logo-hrt" href="/">
+        <img src="www/images/LogoHKNav2.png" alt="" class="d-inline-block align-text-top">
+        Housekeeping and Reference Transcript Atlas
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="/">Home</a>
+          </li>
+          
+          <li class="nav-item">
+            <a class="nav-link" href="?about">About</a>
+          </li>
+  
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="?download"
+              onclick="ga('send', 'event', 'Menu', 'access', 'Download');">Downloads</a>
+          </li>
+          
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenu" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              Gene expression
+            </a>
+
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenu">
+              <li><a class="dropdown-item" href="?page=human-housekeeping-gene/visualization" style="text-align:justify"
+                onclick="ga('send', 'event', 'Menu', 'access', 'Visualize Human');">Human housekeeping genes expression
+                <br> in different tissues
+              </a></li>
+              <li><a class="dropdown-item" href="?page=mouse-housekeeping-gene/visualization" style="text-align:justify"
+                onclick="ga('send', 'event', 'Menu', 'access', 'Visualize Mouse');">Mouse housekeeping genes expression
+                <br> in different tissues
+              </a></li>
+  
+            </ul>
+          </li>
+  
+          <li class="nav-item">
+            <a class="nav-link" href="?modifiers" onclick="ga('send', 'event', 'Menu', 'access', 'Modifiers');">Expression
+              Modifiers</a>
+          </li>
+        </ul>
+        
+      </div>
+    </div>
+  </nav>
+
+
+<body>
+
+  <div class="container">
+    <br>
+    <h1>Download of housekeeping genes and reference transcripts</h1>
+    <p class="text-justify">Users can download the complete list of human and mouse housekeeping
+      genes and housekeeping transcripts. HRT Atlas also privides
+      a list of the most stable housekeeping genes/transcripts across all non-disease tissues
+      analyzed in the database and a list of housekeeping genes identified
+      in both human and mouse databases. In addition, the full list of transcript-specific
+      primer pairs of the proposed candidate reference genes has also been proposed.
+
+    </p>
+
+    <br>
+    <div class="panel panel-default">
+      <br>
+
+      <div class="panel-heading"><img src="www/images/cloud_download.png"
+          style="width: 20px; margin-right: 10px; margin-bottom: 3px;"><strong>Download</strong></div>
+      <div class="panel-body">
+        <h2>Human housekeeping genes/transcripts and reference transcripts</h2>
+        <!-- <div class="panel panel-default"></div> -->
+        <table class="table" style="border-spacing: 2px; border: 2px #e9ecef solid;border-collapse: collapse;">
+          <thead style="background-color: rgb(153, 189, 203);">
+            <tr class="fontthead">
+              <th style="border-top: 0px solid #e9ecef;">File</th>
+              <th style="border-top: 0px solid #e9ecef;">Description</th>
+              <th style="border-top: 0px solid #e9ecef;">Download</th>
+            </tr>
+          <tbody>
+            <tr class="fontthead">
+              <td>Housekeeping transcripts</td>
+              <td>List of human transcripts expressed across 52 tissues and cells types.</td>
+              <td><a href="www/External/data/Housekeeping_TranscriptsHuman.csv" target="_blank">CSV</a><br><br><a
+                  href="www/External/data/Housekeeping_TranscriptsHuman.RData" target="_blank">.RData file</a></td>
+
+            </tr>
+
+            <tr class="fontthead">
+              <td>Housekeeping genes</td>
+              <td>List of human genes stably expressed across 52 tissues and cells types.</td>
+              <td><a href="www/External/data/Housekeeping_GenesHuman.csv" target="_blank">CSV</a><br><br><a
+                  href="www/External/data/Housekeeping_GenesHuman.RData" target="_blank">.RData file</a></td>
+
+
+            </tr>
+
+            <tr class="fontthead">
+              <td>Most stable transcripts</td>
+              <td>This list shows 20 transcripts stably expressed across all of the 52 tissues and cells types. They can
+                be validated in any cell/tissue not available in the human database.</td>
+              <td><a href="www/External/data/MostStable.csv" target="_blank">CSV</a></td>
+
+            </tr>
+
+            <tr class="fontthead">
+              <td>Common genes</td>
+              <td>This list shows the overlap of human and mouse housekeeping genes. 1130 genes were identified.</td>
+              <td><a href="www/External/data/Human_Mouse_Common.csv" target="_blank">CSV</a><br><br><a href="www/External/data/Human_Mouse_Common.RData"
+                  target="_blank">.RData file</a></td>
+
+            </tr>
+            <tr class="fontthead">
+              <td>List of Primers</td>
+              <td>This list shows the 31 primers proposed for the human reference genes database.</td>
+              <td><a href="www/External/data/Validation/Primers_Table/Human_Primer_Validation.csv" target="_blank">CSV</a></td>
+
+            </tr>
+          </tbody>
+
+
+          </thead>
+
+        </table>
+
+        <br>
+        <br>
+        <br>
+
+        <h2>Mouse housekeeping genes/transcripts and reference transcripts</h2>
+        <table class="table" style="border-spacing: 2px; border: 2px #e9ecef solid;border-collapse: collapse;">
+          <thead style="background-color: rgb(153, 189, 203);">
+            <tr class="fontthead">
+              <th style="border-top: 0px solid #e9ecef;">File</th>
+              <th style="border-top: 0px solid #e9ecef;">Description</th>
+              <th style="border-top: 0px solid #e9ecef;">Download</th>
+            </tr>
+          <tbody>
+
+            <tr class="fontthead">
+              <td>Housekeeping transcripts</td>
+              <td>List of mouse transcripts expressed across 14 tissues and cells types.</td>
+              <td><a href="www/External/data/Housekeeping_TranscriptsMouse.csv" target="_blank">CSV</a><br><br><a
+                  href="www/External/data/Housekeeping_TranscriptsMouse.RData" target="_blank">.RData file</a></td>
+
+            </tr>
+
+            <tr class="fontthead">
+              <td>Housekeeping genes</td>
+              <td>List of mouse genes with at least one of their transcripts expressed across 14 tissues and cells
+                types.
+              </td>
+              <td><a href="www/External/data/Housekeeping_GenesMouse.CSV" target="_blank">CSV</a><br><br><a
+                  href="www/External/data/Housekeeping_Genes_Mouse.RData" target="_blank">.RData file</a></td>
+            </tr>
+
+            <tr class="fontthead">
+              <td>Most stable transcripts</td>
+              <td>This list shows 22 transcripts stably expressed across all of the 14 tissues and cells types. They can
+                be validated in any cell/tissue not available in the mouse database.</td>
+              <td><a href="www/External/data/MostStable_Mouse.csv" target="_blank">CSV</a></td>
+
+            </tr>
+
+            <tr class="fontthead">
+              <td>List of Primers</td>
+              <td>This list shows the 17 primers proposed for the mouse reference genes database.</td>
+              <td><a href="www/External/data/Validation/Primers_Table/Mouse_Primer_Validation.csv" target="_blank">CSV</a></td>
+
+            </tr>
+          </tbody>
+
+
+          </thead>
+
+        </table>
+      </div>
+    </div>
+  </div>
+  <br>
+  <!--Footer-->
+  <div id="footer" class="container-fluid shadow-top">
+    <div class="row">
+
+      
+      <br />
+      <div class="col-xs-3 col-lg-2 footerdiv1">
+        <a href='https://www.unicamp.br' target='_blank'><img src='www/images/Unicamp.png' class='imageFooter'></a>
+        <a href='https://www.hemocentro.unicamp.br' target='_blank'><img src='www/images/Hemocentro.png'
+            class='imageFooter imageFooter1'></a>
+      </div>
+      <div class="col-xs-4 col-lg-5 bordst footerdiv">
+        <div sytle="margin:auto" class="footerdiv2">
+          Affiliation
+          <br />
+          University of Campinas
+          <br />
+          Laboratory of Hemostasis and Inflammation - LAHI
+          <br />
+          Hemocentro Campinas/Brazil
+        </div>
+      </div>
+      <div class="col-xs-4 col-lg-5 bordst footerdiv">
+        <div sytle="margin:auto" class="footerdiv2">
+          Contact
+          <br />
+          For questions, problems or suggestions, please send a mail to Bidossessi Wilfried: openbiotools@gmail.com
+        </div>
+        <br />
+        <a href='https://github.com/Bidossessih/HRT_Atlas' target='_blank'><img src='www/images/github.png'
+            style='width: 25px; float: right;'></a>
+      </div>
+
+    </div>
+
+  </div>
+
+</body>
+
+</html>

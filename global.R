@@ -15,9 +15,9 @@ library(ggplot2)
 library(RSQLite)
 
 
-#con <- dbConnect(RSQLite::SQLite(), "~/Repository/HRT_Atlas_db/LogMCF_Housekeeping_human_mouse.sqlite")
+#con <- dbConnect(RSQLite::SQLite(), "/mnt/d/Repository_ubuntu/HRT_Atlas_db/LogMCF_Housekeeping_human_mouse.sqlite")
 
-#con1 <- dbConnect(RSQLite::SQLite(), "~/Repository/HRT_Atlas_db/MCF_Housekeeping_Mouse_mouse.sqlite")
+#con1 <- dbConnect(RSQLite::SQLite(), "/mnt/d/Repository_ubuntu/HRT_Atlas_db/MCF_Housekeeping_Mouse_mouse.sqlite")
 
 con <- dbConnect(RSQLite::SQLite(), "/srv/shiny-server/housekeepingAtlas/db/LogMCF_Housekeeping_human_mouse.sqlite")
 
@@ -39,14 +39,14 @@ HK_RPKM = cbind(HK_RPKM1,HK_RPKM2,HK_RPKM3,HK_RPKM4)
 #Remove after merging
 rm(HK_RPKM1,HK_RPKM2,HK_RPKM3,HK_RPKM4)
 
-load("External/Data/Housekeeping_Genes.RData")
+load("External/Data/Housekeeping_Genes.RData")# =====> down
 #sampleTable <- filter(sampleTable, Designed_Primers>0)
 
 
 load("External/Data/tab_echant_HRTA.RData")
-load("External/Data/GeneInfo.RData")
+load("External/Data/GeneInfo.RData")# =====>down
 
-load("External/Data/GeneMouse.RData")
+load("External/Data/GeneMouse.RData")#====>down
 
 tab_echant <- tab_echant_HRTA
  
@@ -78,9 +78,11 @@ svgico2 = '><path d="m386.136719 430.289062-115.097657-207.175781v-11.113281h-45
 
 load("External/Data/Epiregio/EpiRegio_Gene_HRTAtlas.RData")
 
-###################### Load mouse HK genes
+###################### Load mouse HK genes ==> down
 load("www/Housekeeping_Genes_Mouse.RData")
 colnames(Mouse_HK_genes)[2]="Ensembl"
 Mouse_HK_genes = mutate(Mouse_HK_genes, choice=paste0(Gene, " ", "(", Ensembl, ")"))
+
+
 
                             
