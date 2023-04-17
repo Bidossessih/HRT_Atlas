@@ -32,6 +32,7 @@ mod_visualization_ui <- function(id){
 
     uiOutput(ns("sel_viz")),
     uiOutput(ns("viz")),
+    smDeviceBanner(message = "default"),
    # girafeOutput(ns("bulk_plot")),
     plotlyOutput(ns("bulk_violinplot"))
   )
@@ -41,7 +42,7 @@ mod_visualization_ui <- function(id){
 #'
 #' @noRd
 mod_visualization_server <- function(id){
-  moduleServer( id, function(input, output, session, sel_trans){
+  moduleServer( id, function(input, output, session, sel_g){
     ns <- session$ns
     options(warn = -1)
     query = isolate(getQueryString())
@@ -67,185 +68,116 @@ mod_visualization_server <- function(id){
 
 # Render visualization page
 
-    output$sel_viz = renderUI(
-      # Selectize Input. Function from utils
-      display_selectize(
-        id = ns("viz_selectize"),
-        items = selectize_opt,
-        selectize.title = title_text
-      )
-    )
-
 
 
     # Render gene information
 
-    observeEvent(input$viz_selectize, {
-      sel_gene = input$viz_selectize
+    pageview = NULL#reactive variable to render the page
+    makeReactiveBinding("pageview")
 
-      #sel_gene = "EEF2"
+    sel_gene = NULL
+    makeReactiveBinding("sel_gene")#selected gene
 
-      # gene info and tissue list(top10 detected transcript in each tissue)
-      # top can be modified later
-      top_ref = 10
-      gene_info = get_gene_info(spec = specie, gene = sel_gene, top = top_ref)
+    ## Conditional to render the main visualization page
 
-      gene.name = gene_info$Name
-      gene.description = gene_info$Summary
-      # transcript list order by lenght of tissue for which they have been recommended
-      # See get_gene_info() definition
-      transcript = names(gene_info$default_tissue_norm)
-
-      gene.other.names = gene_info$Synonym
-      ortholog = gene_info$Ortholog_symbol
+    if(length(query) == 1) {
 
 
-      ### Group button to display transcript information and plot
-
-      trans_button = radioGroupButtons(
-          inputId = ns("trans_sel"),
-          label = "Ensembl transcript id:",
-          choices = transcript,
-          direction = "vertical"
+      output$sel_viz = renderUI(
+        # Selectize Input. Function from utils
+        display_selectize(
+          id = ns("viz_selectize"),
+          items = selectize_opt,
+          selectize.title = title_text
         )
+      )
 
+      observeEvent(input$viz_selectize, {
+        sel_gene = input$viz_selectize
+        # gene info and tissue list(top10 detected transcript in each tissue)
+        # top can be modified later
+        top_ref = 10
 
-      #print(paste("Gene synonym ", str(gene.other.names)))
-      output$viz = renderUI(tagList(
-        # Gene and transcript information
-        hk_transcript_desc(
+        # Visualization page
+        pageview = viz.helper(
+          sel_gene = input$viz_selectize,
+          top_ref = top_ref,
           specie = specie,
-          gene.symbol = input$viz_selectize,
-          gene.name = gene.name,
-          gene.description = gene.description,
-          tissue_info_id = ns("ref_tissue_id"),
-          gene.other.names = gene.other.names,
-          ortholog = ortholog,
-          trans_selectize = trans_button
+          ns = ns,
+          output = output,
+          input = input
         )
 
+      }) #End of main Visualization page
 
-      ))
+    } else if (length(query) == 2) {#From here gene specific page will be rendered
+      #sel_gene = query[["gene"]]
 
-    # Create a reactive valor of the selected transcript
-    ### This value will be updated when the user click on the transcript id from the
-    #visualization table(Gene information). See trans_button value above
+      top_ref = 10
 
-    sel_transcript_id = NULL
-    makeReactiveBinding("sel_transcript_id")
-
-    #tissue_info = NULL
-    #makeReactiveBinding("tissue_info")
-
-    observeEvent(input$trans_sel != "", {
-      print("It is working,...")
-      sel_transcript_id <<- input$trans_sel
-
-    })
+      output$sel_viz = renderUI(
+        # Selectize Input. Function from utils
+        display_selectize(
+          id = ns("viz_selectize"),
+          items = selectize_opt,
+          seleted.gene = query[["gene"]],
+          selectize.title = title_text
+        )
+      )
 
 
+      updateSelectizeInput(
+        session,
+        inputId = "viz_selectize",
+        choices = selectize_opt,
+        selected = query[["gene"]],
+        server = TRUE
+      )
 
-    observe({
-      #print("Loading...")
-      #Wait for the loading of transcript's Group button
 
-      if(!is.null(sel_transcript_id)){
+      pageview = viz.helper(
+        sel_gene = query[["gene"]],
+        top_ref = top_ref,
+        specie = specie,
+        ns = ns,
+        output = output,
+        input = input
+      )
 
-        tissue_info = gene_info$default_tissue_norm
-        print(sel_transcript_id)
+      observeEvent(input$viz_selectize, {
+        sel_gene = input$viz_selectize
 
-        removeUI(
-          selector = paste0("#", ns("ref-tissue-id"))
+        updateSelectizeInput(
+          session,
+          inputId = "viz_selectize",
+          choices = selectize_opt,
+          selected = input$viz_selectize,
+          server = TRUE
         )
 
-
-        if(all(is.na(tissue_info[[sel_transcript_id]]))){
-          tissue_title = str_glue("{sel_transcript_id} is not among the top{top_ref}
-                                  candicate reference transcripts of any tissue.")
-
-          tissue_res = NULL
-        }else{
-          tissue_title = str_glue("{sel_transcript_id} has been ranked as a top{top_ref}
-                                  candicate reference transcripts of the following tissue.")
-          # Tissue recommended
-          tissue_res = tissue_info[[sel_transcript_id]]
-
-          tis = c()
-
-          for(i in 1:length(tissue_res)){
-            tis0 = HTML(str_glue("<a href='/?page={str_to_lower(specie)}-housekeeping-gene&tissue={tissue_res[i]}'>
-                                 <span class='badge bg-secondary'>{tissue_res[i]}</span></a>"))
-
-            tis = c(tis, tis0)
-          }
-
-          tissue_res = HTML(str_c(tis, collapse = "\t"))
-
-        }
-
-
-
-
-        insertUI(
-          selector = paste0("#", ns("ref_tissue_id")),
-          where = "beforeEnd",
-          ui = div(id = ns("ref-tissue-id"),
-                   em(tissue_title),
-                   br(),
-                   br(),
-                   div(tissue_res))
+        updateQueryString(
+          str_glue("?page=human-housekeeping-gene/visualization&gene={input$viz_selectize}"),
+          mode = "replace"
         )
 
-      }
-
-    })
-
-
-
-
-    output$bulk_violinplot <- renderPlotly({
-        p = plot_ly(
-          loadDataTrans(ens_l=sel_transcript_id),
-          y = ~ log_rpkm,
-          x = ~ cell_type,
-          type = "violin",
-          hoverinfo = "none",
-          split = ~ cell_type,
-          box = list(visible = T),
-          meanline = list(visible = T),
-          textfont = list(color = 'red', size = 10)
-        ) %>%
-          layout(title = paste0("Expression level of ", sel_transcript_id)) %>%
-          layout(
-            showlegend = FALSE,
-            xaxis = list(
-              title = "",
-              showticklabels = TRUE,
-              tickangle = 60
-            ),
-            yaxis = list(title = "Normalized Expression \n (log2 RPKM)")
-          ) %>%
-          config(
-            displayModeBar = TRUE,
-            modeBarButtonsToRemove = c(
-              'zoom',
-              'pan',
-              'select',
-              'zoomIn',
-              'zoomOut',
-              'autoScale',
-              'hoverClosestCartesian',
-              'hoverCompareCartesian'
-            )
-          )
-
-        suppressWarnings(p)
-
+        pageview = viz.helper(
+          sel_gene = sel_gene,
+          top_ref = top_ref,
+          specie = specie,
+          ns = ns,
+          output = output,
+          input = input
+        )
 
       })
 
-    }) #End of plotting
 
+    }
+
+
+
+
+    isolate(pageview)
 
   })
 }

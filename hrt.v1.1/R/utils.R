@@ -7,12 +7,61 @@
 #' @export
 
 
-display_selectize = function(id, items, selectize.title = NULL) {
+display_selectize = function(id, items, seleted.gene = NULL, selectize.title = NULL) {
 
-  selectInput(id, label = selectize.title, choices = items, selected = items[1], selectize=TRUE)
+  if(is.null(seleted.gene)){
+    seleted.gene = ""
+  }
+
+  selectInput(id, label = selectize.title, choices = items, selected = seleted.gene, selectize=TRUE)
 }
 
 
+#' Function to display a banner in small device
+#'
+#'
+
+smDeviceBanner = function(message = "default") {
+  # text to be shown
+  if (message == "default") {
+    message = "Please use this page on your desktop (at least 768px wide). You can dismiss this banner,
+              but certain features might not work correctly."
+  }
+
+
+  div(class = "modal",
+      tabindex = "-1",
+      div(class = "modal-dialog",
+          div(
+            class = "modal-content",
+            div(
+              class = "modal-header",
+              h5(class = "modal-title",
+                 "Modal title"),
+              tags$button(
+                type = "button",
+                class = "btn-close",
+                "data-bs-dismiss" = "modal",
+                "aria-label" = "Close"
+              )
+            ),
+            div(class = "modal-body",
+                p(message)),
+            div(
+              class = "modal-footer",
+              tags$button(
+                type = "button",
+                class = "btn btn-secondary",
+                "data-bs-dismiss" = "modal",
+                "Close"
+              ),
+              tags$button(type = "button",
+                     class = "btn btn-primary",
+                     "Save changes")
+            )
+          )))
+
+}
 
 #' Fech visualization data
 #'
@@ -44,13 +93,14 @@ get_gene_info = function(spec, gene, top = 10){
   con <- dbConnect(RSQLite::SQLite(), db_path)
 #get gene info
   geneI = tbl(con, "HK_gene_transcript_info") %>%
-    filter(specie == spec, gene_name == gene)
+    filter(specie == spec, gene_name == gene) %>%
+    select(gene_name, Name, Summary, Ortholog_symbol, Synonym) %>% collect()
   #Get transcript info to enable filtering based on the number of tissue in which
   #the transcripts have been identified as relevant reference transcript
 
   cellI = tbl(con, "Tissue_Info_ref_transcripts_qpcr") %>%
     filter(specie == spec, gene_name == gene) %>%
-    select(cell_type, gene_name, mean, rank)
+    select(cell_type, ens_transcript_id, gene_name, mean, rank) %>% collect()
   #merge information
   dplyr::left_join(x = geneI, y = cellI, by = "gene_name") %>%
     collect() -> gene_info
@@ -75,7 +125,7 @@ get_gene_info = function(spec, gene, top = 10){
   #Include only tissue in which the transcripts have mean rkpm >=30 (default setting)
   #only these tissues will be shown in the recommendation section. See visualization module
   #NA is include to avoid error when the gene didn't have any recommended candidate reference gene
-  data = gene_info[,c(3,10:12)] %>% filter(rank <= top | is.na(rank) )
+  data = gene_info[,6:9] %>% filter(rank <= top | is.na(rank) )
 
   #change cell_type in NA if rank is NA
 
@@ -83,12 +133,13 @@ get_gene_info = function(spec, gene, top = 10){
                           NA,
                           data$cell_type)
 
-  data = unique(data[,(1:2)])
+  data = unique(data[,c(1:2,4)])
 
   default_tissue_norm = list()
 
   for (i in 1:length(results[["ens_transcript_id"]])) {
     trans = results[["ens_transcript_id"]][i]
+    data_s = data %>% filter(ens_transcript_id == trans)
     transL = unique(as.character(data$cell_type[which(data$ens_transcript_id==trans)]))
 
     default_tissue_norm[[stringr::str_glue("{trans}")]] = transL
@@ -105,7 +156,7 @@ get_gene_info = function(spec, gene, top = 10){
 
 }
 
-#gene_info = get_gene_info(spec="Human", gene="AAMP", top=10)
+#gene_info = get_gene_info(spec="Human", gene="AES", top=10)
 
 #gene_info = get_gene_info(spec="Human", gene="EEF2", top=10)
 
@@ -145,5 +196,7 @@ loadDataTrans <- function(ens_l) {
 }
 
 #' Accordion
+#'
+#'
 #'
 

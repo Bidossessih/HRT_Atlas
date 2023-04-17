@@ -4,7 +4,7 @@
 \alias{display_selectize}
 \title{Function to display selectize input}
 \usage{
-display_selectize(id, items, selectize.title = NULL)
+display_selectize(id, items, seleted.gene = NULL, selectize.title = NULL)
 }
 \arguments{
 \item{id}{is the id of each selectize}

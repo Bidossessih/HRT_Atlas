@@ -30,6 +30,7 @@ url2template = function(fname, query, main_template_path = "template/", temp_var
   #url_list = gsub(".html", "", list.files("template/")) # get list of html files
 
   query_name = names(query)
+
   #check if template exists in the main_template_path directory or in a sub-directory
   check_temp = file.exists(stringr::str_glue("template/{query['page']}.html"))
 
@@ -42,14 +43,17 @@ url2template = function(fname, query, main_template_path = "template/", temp_var
 
   str(query)
   print(stringr::str_glue("Query names are : {query_name}"))
+
+  # Home page
   if(nchar(fname) == 0 || query_name == "homePageGlobal") {
 
     path_2_template = stringr::str_glue("{main_template_path}index.html")
 
+    # Page with existing template in template root directory
   } else if(length(query) == 1 & check_temp){
 
     path_2_template = stringr::str_glue("{main_template_path}{query['page']}.html")
-
+  # Visualization page
   } else if (length(query) == 1 &
              file.exists(stringr::str_glue("template/{query_name[[1]]}.html")) &
              !(check_temp)) {
@@ -59,9 +63,16 @@ url2template = function(fname, query, main_template_path = "template/", temp_var
 
     path_2_template = stringr::str_glue("{main_template_path}{query_name}.html")
 
-    if(query_name[[1]] == "human-housekeeping-gene/visualization"){
-      temp_var = mod_visualization_ui("visualization_1")
-    }
+    #if(query_name[[1]] == "human-housekeeping-gene/visualization"){
+    #  temp_var = mod_visualization_ui("visualization_1")
+    #}
+
+  } else if(length(query) == 2 & names(query)[[2]]=="gene"){
+
+    query_name = query[[1]]
+
+    path_2_template = stringr::str_glue("{main_template_path}{query_name}.html")
+
 
   } else {
     path_2_template = stringr::str_glue("{main_template_path}error.html")
