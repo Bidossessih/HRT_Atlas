@@ -1,0 +1,63 @@
+if(length(query) == 1) {
+  observeEvent(input$viz_selectize, {
+    sel_gene = input$viz_selectize
+    
+    #sel_gene = "EEF2"
+    
+    # gene info and tissue list(top10 detected transcript in each tissue)
+    # top can be modified later
+    top_ref = 10
+    pageview = viz.helper(
+      sel_gene = input$viz_selectize,
+      top_ref = top_ref,
+      specie = specie,
+      ns = ns,
+      output = output,
+      input = input
+    )
+    
+  }) #End of plotting
+  
+} else if (length(query) == 2) {
+  sel_gene = query[["gene"]]
+  
+  top_ref = 10
+  
+  observe({
+    updateSelectizeInput(
+      session,
+      inputId = "viz_selectize",
+      choices = selectize_opt,
+      selected = query[["gene"]],
+      server = TRUE
+    )
+  })
+  
+  observeEvent(input$viz_selectize, {
+    sel_gene = input$viz_selectize
+    
+    updateQueryString(str_glue("?page=human-housekeeping-gene/visualization&gene={input$viz_selectize}"),
+                      mode = "push")
+    
+    observe({
+      updateSelectizeInput(
+        session,
+        inputId = "viz_selectize",
+        choices = selectize_opt,
+        selected = query[["gene"]],
+        server = TRUE
+      )
+    })
+  })
+  
+  
+  
+  pageview = viz.helper(
+    sel_gene = query[["gene"]],
+    top_ref = top_ref,
+    specie = specie,
+    ns = ns,
+    output = output,
+    input = input
+  )
+}

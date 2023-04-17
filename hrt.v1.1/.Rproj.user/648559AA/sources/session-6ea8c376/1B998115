@@ -1,0 +1,26 @@
+{
+    "id": "1B998115",
+    "path": "/mnt/d/Repository_ubuntu/Housekeeping/HRT_Atlas/hrt.v1.1/R/mod_visualization.R",
+    "project_path": "R/mod_visualization.R",
+    "type": "r_source",
+    "hash": "2458972579",
+    "contents": "",
+    "dirty": false,
+    "created": 1680364956530.0,
+    "source_on_save": false,
+    "relative_order": 3,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "161,0",
+        "scrollLine": "153"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1681691245,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1681691132390,
+    "read_only": false,
+    "read_only_alternatives": []
+}

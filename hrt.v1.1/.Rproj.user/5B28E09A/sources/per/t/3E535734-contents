@@ -1,0 +1,70 @@
+pacman::p_load(
+  "dplyr",
+  "pROC",
+  "DESeq2",
+  "tidyverse",
+  "ggbeeswarm",
+  "ggprism",
+  "patchwork",
+  "ComplexHeatmap",
+  "cowplot",
+  "VennDiagram",
+  "readxl",
+  "DEGreport"
+)
+source("D:/OneDrive/Posdoc/R_functions/RNAseq_explo.R")
+
+dds_lrt <- DESeqDataSetFromMatrix(countData = countMatrix_CT_AIJ_coding,
+                              colData = meta_data,
+                              design = ~Disease)
+
+dds_lrt <- DESeq(dds_lrt, test="LRT", reduced = ~ 1)
+
+res_LRT <- results(dds_lrt)
+
+summary(res_LRT)
+
+
+# Subset the LRT results to return genes with padj < 0.05
+padj.cutoff = 0.05
+sig_res_LRT <- res_LRT %>%
+  data.frame() %>%
+  rownames_to_column(var="gene") %>% 
+  as_tibble() %>% 
+  filter(padj < padj.cutoff)
+
+# Get sig gene lists
+sigLRT_genes <- sig_res_LRT %>% 
+  pull(gene)
+
+length(sigLRT_genes)
+
+vsd_lrt <- vst(dds_lrt, blind=FALSE)
+# Obtain vsd values for those significant genes
+vsd_for_cluster <- assay(vsd_lrt)[sigLRT_genes, ]
+
+rownames(meta_data) = meta_data$Sample
+
+# Use the `degPatterns` function from the 'DEGreport' package to show gene clusters across sample groups
+cluster_lrt <- degPatterns(vsd_for_cluster, metadata = meta_data,
+                           time = "Groups", col=NULL)
+
+# What type of data structure is the `clusters` output?
+class(clusters)
+
+# Let's see what is stored in the `df` component
+cluster_lrt_data = cluster_lrt$plot$data
+
+ggplot(cluster_lrt_data, aes(x=Groups, y=value, group=Groups)) + 
+  geom_boxplot() + geom_jitter() +
+  facet_grid(. ~ cluster)
+
+cluster_lrt_plot = cluster_lrt$plot + theme_bw() 
+cluster_lrt_plot
+#remove lines
+cluster_lrt_plot$layers[[4]] = NULL
+cluster_lrt_plot 
+
+cluster_lrt_plot$layers[[2]] = NULL
+
+cluster_lrt_plot
