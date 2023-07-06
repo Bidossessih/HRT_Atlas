@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  {{ headContent() }}
+
+  
+  <link rel="shortcut icon" type="image/x-icon" href="www/images/LogoHK220X150.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+  <title>HRT Atlas: Database of Housekeeping Genes and Reference Genes/Transcripts</title>
+  <meta name="Description"
+    content="Human and mouse candidate reference transcripts/genes for qPCR normalization. Suitable tissue specific reference genes and efficient primers." />
+
+  <meta itemprop="name" content="Housekeeping genes database" />
+  <meta itemprop="description" content="Human and mouse candidate reference transcripts/genes for qPCR normalization.
+    Users can search for the most suitable tissue specific reference genes (endogenous controls) and efficient primers to normalize their qPCR experiments.
+    Diseases and small molecules that can modify expression stability." />
+
+  <meta itemprop="image" content="www/images/pipeline2.png" />
+  <link rel="publisher" href="https://plus.google.com/+www.housekeeping.unicamp.br" />
+  <meta property="og:url" content="www.housekeeping.unicamp.br" />
+  <meta property="og:site_name" content="Housekeeping genes database" />
+  <meta property="og:description" content="Human and mouse candidate reference transcripts/genes for qPCR normalization.
+    Users can search for the most suitable tissue specific reference genes (endogenous controls) and efficient primers 
+    to normalize their qPCR experiments. Diseases and small molecules that can modify expression stability." />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="www/images/pipeline2.png" />
+  <meta name="twitter:url" content="www.housekeeping.unicamp.br" />
+  <meta name="twitter:title" content="Housekeeping genes database" />
+  <meta name="twitter:description" content="Human and mouse candidate reference transcripts/genes for qPCR normalization.
+    Users can search for the most suitable tissue specific reference genes (endogenous controls) and efficient primers to 
+    normalize their qPCR experiments. 
+    Diseases and small molecules that can modify expression stability." />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:image" content="www/images/pipeline2.png" />
+  <meta name="twitter:creator" content="@BidossessiH" />
+  <meta name="author" content="Bidossessi Wilfried Hounkpe" />
+  <meta name="robots" content="index" />
+
+  <meta property="og:site_name" content="OUP Academic">
+  <meta property="og:type" content="article">
+  <meta property="og:title"
+    content="HRT Atlas v1.0 database: redefining human and mouse housekeeping genes and candidate reference transcripts by mining massive RNA-seq datasets">
+  <meta property="og:description"
+    content="Abstract.  Housekeeping (HK) genes are constitutively expressed genes that are required for the maintenance of basic cellular functions. Despite their importanc">
+  <meta property="og:url" content="https://academic.oup.com/nar/article/doi/10.1093/nar/gkaa609/5871367">
+  <meta property="og:image" content="//oup.silverchair-cdn.com/UI/app/img/generic-cover.png">
+  <meta property="og:updated_time" content="2020-07-14">
+  <meta name="citation_author" content="Hounkpe, Bidossessi Wilfried">
+  <meta name="citation_author_institution"
+    content="School of Medical Sciences, University of Campinas, Campinas, SP, Brazil">
+  <meta name="citation_author" content="Chenou, Francine">
+  <meta name="citation_author_institution"
+    content="School of Medical Sciences, University of Campinas, Campinas, SP, Brazil">
+  <meta name="citation_author" content="de&nbsp;Lima, Franciele">
+  <meta name="citation_author_institution"
+    content="School of Medical Sciences, University of Campinas, Campinas, SP, Brazil">
+  <meta name="citation_author" content="De&nbsp;Paula, Erich Vinicius">
+  <meta name="citation_author_institution"
+    content="School of Medical Sciences, University of Campinas, Campinas, SP, Brazil">
+  <meta name="citation_author_institution"
+    content="Hematology and Hemotherapy Center, University of Campinas, Campinas, SP, Brazil">
+  <meta name="citation_title"
+    content="HRT Atlas v1.0 database: redefining human and mouse housekeeping genes and candidate reference transcripts by mining massive RNA-seq datasets">
+  <meta name="citation_doi" content="10.1093/nar/gkaa609">
+  <meta name="citation_journal_title" content="Nucleic Acids Research">
+  <meta name="citation_journal_abbrev" content="Nucleic Acids Res">
+ 
+  <meta name="citation_pdf_url"
+    content="https://academic.oup.com/nar/article-pdf/doi/10.1093/nar/gkaa609/33495304/gkaa609.pdf">
+  <meta name="description"
+    content="Abstract.  Housekeeping (HK) genes are constitutively expressed genes that are required for the maintenance of basic cellular functions. Despite their importanc">
+
+
+  
+</head>
+
+
+
+
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-style navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand logo-hrt" href="/">
+        <img src="www/images/LogoHKNav2.png" alt="" class="d-inline-block align-text-top">
+        Housekeeping and Reference Transcript Atlas
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/">Home</a>
+          </li>
+          
+          <li class="nav-item">
+            <a class="nav-link" href="?about">About</a>
+          </li>
+  
+          <li class="nav-item">
+            <a class="nav-link" href="?download"
+              onclick="ga('send', 'event', 'Menu', 'access', 'Download');">Downloads</a>
+          </li>
+          
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenu" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              Gene expression
+            </a>
+
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenu">
+              <li><a class="dropdown-item" href="?page=human-housekeeping-gene/visualization" style="text-align:justify"
+                onclick="ga('send', 'event', 'Menu', 'access', 'Visualize Human');">Human housekeeping genes expression
+                <br> in different tissues
+              </a></li>
+              <li><a class="dropdown-item" href="?page=mouse-housekeeping-gene/visualization" style="text-align:justify"
+                onclick="ga('send', 'event', 'Menu', 'access', 'Visualize Mouse');">Mouse housekeeping genes expression
+                <br> in different tissues
+              </a></li>
+  
+            </ul>
+          </li>
+  
+          <li class="nav-item">
+            <a class="nav-link" href="?modifiers" onclick="ga('send', 'event', 'Menu', 'access', 'Modifiers');">Expression
+              Modifiers</a>
+          </li>
+        </ul>
+        
+      </div>
+    </div>
+  </nav>
+
+
+
+  <div class="container-fluid Container-fluid" style="margin-top: -10px;">
+    <div id="pageUI" style="width:85%; margin: auto;">
+      <div class="mainboxStyle">
+        <div id="home">
+          <div style="width:100%; margin:auto">
+            <img src="www/images/housekeeping.jpg" alt="List of housekeeping genes and reference genes/transcripts"
+              style="width:33%;" />
+          </div>
+          <br>
+          <h1 class="infotextdev" style="color:#444; text-align: center;">
+            HRT Atlas: Database of housekeeping genes and reference transcripts
+          </h1>
+
+          <p class="infotextdev" style="margin-top: 2%;color:#444; text-align: center;">Tool to search human and mouse
+            housekeeping and candidate reference genes/transcripts.
+            <br>It also offers tissue and cell selective candidate reference transcripts and some primers for
+            quantitative PCR
+            normalization.
+          </p>
+
+          <p class="infotextdev" style="margin-top: 2%;color:#444">
+            Click on Human or Mouse icon to display their search boxes.
+            <a href="?about">
+              <strong>Learn more</strong>
+            </a>
+          </p>
+          <div class="icondiv">
+            <div>
+              <a href="?human" onclick="ga('send', 'event', 'link', 'access', 'Human Database');"><img
+                  src="www/images/humanWeb.gif" alt="Best human housekeeping genes and reference genes/transcripts"
+                  class="iconHuman"></a>
+              <a href="?mouse" onclick="ga('send', 'event', 'link', 'access', 'Mouse Database');"><img
+                  src="www/images/mouseWeb.gif" alt="Best mouse housekeeping genes and reference genes/transcripts"
+                  class="iconMouse"></a>
+            </div>
+          </div>
+          <br>
+          <br>
+
+          <div class="modifiers">
+            <table>
+              <tbody>
+                <tr>
+                  <td id="td1" style="text-align: justify;" class="col-xs-1"><img src="www/images/boxplot.png"
+                      style="width: 40px;"></td>
+                  <td id="td2" style="text-align: justify;" class="col-xs-11"><span>Alternatively, you can visualize the
+                      <strong>expression</strong> of individual </span>
+                    <a href="?page=human-housekeeping-gene/visualization"><strong>Human</strong></a><span> or </span>
+                    <a href="?page=mouse-housekeeping-gene/visualization">
+                      <strong>Mouse</strong></a><span> candidate reference transcripts and housekeeping
+                      genes/transcripts, and potential <a href="?modifiers"
+                        onclick="ga('send', 'event', 'link', 'access', 'Modifiers');"><strong>modifiers</strong></a> of
+                      its expression.</span></td>
+                </tr>
+              </tbody>
+
+            </table>
+          </div>
+
+
+          <div class="citation">
+            <strong>
+              Please acknowledge Housekeeping and Reference Transcript Atlas in your publications by citing the
+              following reference:
+              <br />
+            </strong>
+            HRT Atlas v1.0 database: redefining human and mouse housekeeping genes and candidate reference transcripts
+            by mining
+            massive RNA-seq datasets
+            <br />
+            Bidossessi Wilfried Hounkpe, Francine Chenou, Franciele de Lima, Erich Vinicius De Paula
+            <br />
+            <a href="https://doi.org/10.1093/nar/gkaa609" target="_blank"> Nucleic Acids Research, gkaa609, doi:
+              https://doi.org/10.1093/nar/gkaa609</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid clustrmaps-main-container">
+
+    <script type="text/javascript" id="clustrmaps"
+    src="//cdn.clustrmaps.com/map_v2.js?cl=99bdcb&w=400&t=n&d=mQ8nzABJ0g61rk3xh1L1Gc-y0KuKimwtN-rRwJPAk-8&co=ffffff">
+    </script>
+
+  </div>
+  
+
+  <!--Footer-->
+
+  <div id="footer" class="container-fluid shadow-top">
+    <div class="row">
+
+      
+      <br />
+      <div class="col-xs-3 col-lg-2 footerdiv1">
+        <a href='https://www.unicamp.br' target='_blank'><img src='www/images/Unicamp.png' class='imageFooter'></a>
+        <a href='https://www.hemocentro.unicamp.br' target='_blank'><img src='www/images/Hemocentro.png'
+            class='imageFooter imageFooter1'></a>
+      </div>
+      <div class="col-xs-4 col-lg-5 bordst footerdiv">
+        <div sytle="margin:auto" class="footerdiv2">
+          Affiliation
+          <br />
+          University of Campinas
+          <br />
+          Laboratory of Hemostasis and Inflammation - LAHI
+          <br />
+          Hemocentro Campinas/Brazil
+        </div>
+      </div>
+      <div class="col-xs-4 col-lg-5 bordst footerdiv">
+        <div sytle="margin:auto" class="footerdiv2">
+          Contact
+          <br />
+          For questions, problems or suggestions, please send a mail to Bidossessi Wilfried: openbiotools@gmail.com
+        </div>
+        <br />
+        <a href='https://github.com/Bidossessih/HRT_Atlas' target='_blank'><img src='www/images/github.png'
+            style='width: 25px; float: right;'></a>
+      </div>
+
+    </div>
+
+  </div>
+
+</body>
+
+
+</html>

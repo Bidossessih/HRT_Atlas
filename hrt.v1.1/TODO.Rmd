@@ -1,0 +1,15 @@
+---
+title: "TODO"
+author: "Bidossessi"
+date: "2023-04-01"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## debug Visualization page (DONE)
+Some ENS transcript information are broken. Examples: AARS and ADH5.
+  - NA appears in ENS ID column
+  - the violin plot doesn't appear
