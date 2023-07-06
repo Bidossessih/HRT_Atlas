@@ -29,12 +29,3 @@ $(document).ready(function () {
         
     });
 });
-
-
-
-
-$("div[content = 'icc_container']").click(function () {
-
-
-}
-  
