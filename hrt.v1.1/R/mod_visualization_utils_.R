@@ -10,6 +10,240 @@ table_func = function(col1_info, col2_info) {
 }
 
 
+#' Function to display tabpanel
+#'
+#' @param title is a vector of string indicating the titles
+#' @param named list indicating the content of each tabpanel. The list names correspond to the vector of title.
+#' @param id is the id of the tab
+#' @param gene.symbol selected gene symbol
+
+tabpanel2render = function(id, title, content, gene.symbol){
+
+  #tabpanel
+  tabpanelrender = c()
+
+  # tab content
+
+  tabcontent = c()
+
+
+
+  for (i in 1:length(title)) {
+
+    if(i==1){
+      tabpanelrender0 = HTML(
+        str_glue(
+          '
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="{title[i]}-tab" data-bs-toggle="tab"
+            data-bs-target="#{title[i]}" type="button" role="tab" aria-controls={title[i]}
+            aria-selected="true">{str_to_sentence(title[i])}</button></li>
+          '
+        )
+      )
+
+      ## tab content
+
+      tabcontent0 = str_glue(
+        '
+        <div class="tab-pane fade show active" id="{title[i]}" role="tabpanel" aria-labelledby="{title[i]}-tab">{content[[title[i]]]}</div>
+        '
+      )
+
+
+      tabpanelrender = c(tabpanelrender, tabpanelrender0)
+      tabcontent = c(tabcontent, tabcontent0)
+
+      print(content[[title[i]]])
+
+    } else {
+
+      # Tab title
+
+      panel_title = str_replace_all(str_to_sentence(title[i]), "_", " ")
+
+      # Check whether ICC is available
+
+      icc_image_0 = gene2iccImg(gene = gene.symbol)
+
+      print("Yes img_url Yes")
+      print(gene.symbol)
+      img_url = icc_image_0$imageUrl[1]
+      print(img_url)
+
+
+      # Tab will be disabled if ICC image is not available
+
+      if(panel_title == "Sub cellular" & is.na(img_url)){
+        disabled = "disabled"
+        tooltip_icc = "tooltip"
+        no.icc = "Not available"
+      }else{
+        disabled = tooltip_icc = no.icc = ""
+      }
+
+
+
+      tabpanelrender0 = HTML(
+        str_glue(
+
+          '
+          <li class="nav-item" role="presentation">
+            <span class="d-inline-block pe-auto" tabindex="0" data-bs-toggle="{tooltip_icc}" title="{no.icc}">
+              <button class="nav-link {disabled}" id="{title[i]}-tab" data-bs-toggle="tab"
+                data-bs-target="#{title[i]}" type="button" role="tab" aria-controls={title[i]}
+                aria-selected="true">{panel_title}
+              </button>
+            </span>
+          </li>
+          '
+        )
+      )
+
+      ## tab content
+
+      tabcontent0 = str_glue(
+        '
+        <div class="tab-pane fade show" id="{title[i]}" role="tabpanel" aria-labelledby="{title[i]}-tab">{content[[title[i]]]}</div>
+        '
+      )
+
+      tabpanelrender = c(tabpanelrender, tabpanelrender0)
+
+      tabcontent = c(tabcontent, tabcontent0)
+
+    }
+
+
+  }
+
+  tagList(tags$ul(class = "nav nav-tabs",
+     id = id,
+     role = "tablist",
+     #### tabpanel
+     HTML(str_c(tabpanelrender, collapse = "\t"))
+
+     ),
+
+     tags$div(class = "tab-content",
+         id = str_glue("{id}Content"),
+
+         HTML(str_c(tabcontent, collapse = "\t"))
+         )
+     )
+}
+
+#tabpanel2render(id="idtab", title=c("tab1", "tab2"), content = list(tab1 = "tab1 content", tab2 = "tab2 content"))
+
+
+#' Function to display ICC and IF images from Human Protein Atlas
+#'
+#' @param title is a vector of string indicating the titles
+#' @param named list indicating the content of each tabpanel. The list names correspond to the vector of title.
+#' @param id is the id of the tab
+
+
+icc_viewer = function(icc_data){
+
+  #tabpanel
+  tabpanelrender = c()
+
+  # tab content
+
+  tabcontent = c()
+
+  for (i in 1:nrow(icc_data)) {
+
+
+    if(i==1){
+      tabpanelrender0 = HTML(
+        str_glue(
+          '
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active icc-tab-button" id="icc_{i}-tab"
+            data-bs-target="#icc_{i}" type="button" role="tab" aria-controls=icc_{i}
+            data-bs-toggle="tab" data-bs-html="true" title="{icc_data$cell[1]}"
+            aria-selected="true">
+            <img src="{icc_data$imageUrl[i]}" alt="{icc_data$cell[i]}" class = "icc-tab-img">
+            </button></li>
+          '
+        )
+      )
+
+      ## tab content
+
+      tabcontent0 = str_glue(
+        '
+        <div class="tab-pane fade show active icc-main-img" id="icc_{i}" role="tabpanel" aria-labelledby="icc_{i}-tab">
+          <a href = "{icc_data$imageUrl[i]}" target = "_blank">
+            <img src="{icc_data$imageUrl[i]}" class="img-fluid" alt="ICC image">
+          </a>
+        </div>
+        '
+      )
+
+
+      tabpanelrender = c(tabpanelrender, tabpanelrender0)
+      tabcontent = c(tabcontent, tabcontent0)
+
+
+
+    } else {
+
+      tabpanelrender0 = HTML(
+        str_glue(
+
+          '
+          <li class="nav-item" role="presentation">
+            <button class="nav-link icc-tab-button" id="icc_{i}-tab"
+            data-bs-target="#icc_{i}" type="button" role="tab" aria-controls=icc_{i}
+            data-bs-toggle="tab" data-bs-html="true" title="<em>{icc_data$cell[i]}</em>"
+            aria-selected="true">
+             <img src="{icc_data$imageUrl[i]}" alt="{icc_data$cell[i]}"  class = "icc-tab-img">
+            </button></li>
+          '
+        )
+      )
+
+      ## tab content
+
+      tabcontent0 = str_glue(
+        '
+        <div class="tab-pane fade show icc-main-img" id="icc_{i}" role="tabpanel" aria-labelledby="icc_{i}-tab">
+          <a href = "{icc_data$imageUrl[i]}" target = "_blank">
+            <img src="{icc_data$imageUrl[i]}" class="img-fluid" alt="ICC image">
+          </a>
+        </div>
+        '
+      )
+
+      tabpanelrender = c(tabpanelrender, tabpanelrender0)
+
+      tabcontent = c(tabcontent, tabcontent0)
+
+    }
+
+
+  }
+
+  tagList(tags$ul(class = "nav nav-tabs", style = "border-bottom: none; margin-top: 10px;",
+                  id = "icc_tabs",
+                  role = "tablist",
+                  #### tabpanel
+                  HTML(str_c(tabpanelrender, collapse = "\t"))
+
+  ),
+  ### ICC
+  tags$div(class = "tab-content",
+           id = "icc_Content",
+
+           HTML(str_c(tabcontent, collapse = "\t"))
+  )
+  )
+}
+
+
+
 
 #' Function to define render the description of each transcript
 #'
@@ -46,7 +280,11 @@ hk_transcript_desc = function(specie, gene.symbol,
     ortholog = stringr::str_glue("Not identified as candidate reference gene in {ort_specie}")
   }
 
+  #print("gene.name")
+  #print(gene.name)
 
+### Clean gene.name
+  gene.name = str_replace(gene.name, "<span", " <span")
 
   return(
 
@@ -187,7 +425,8 @@ viz.helper = function(sel_gene, top_ref=10, specie, ns, output, input){
 
 
   #print(paste("Gene synonym ", str(gene.other.names)))
-  output$viz = renderUI(tagList(
+  ### Render gene summary
+  viz = renderUI(tagList(
     # Gene and transcript information
     hk_transcript_desc(
       specie = specie,
@@ -277,9 +516,9 @@ viz.helper = function(sel_gene, top_ref=10, specie, ns, output, input){
   })
 
 
+  ### Rendering Tissue expression (GTEX)
 
-
-  output$bulk_violinplot <- renderPlotly({
+  bulk_violinplot <- renderPlotly({
     p = plot_ly(
       loadDataTrans(ens_l=sel_transcript_id),
       y = ~ log_rpkm,
@@ -318,6 +557,57 @@ viz.helper = function(sel_gene, top_ref=10, specie, ns, output, input){
     suppressWarnings(p)
 
 
-  })
+  }) # End tissue expression
+
+  output$bulk_violinplot = bulk_violinplot
+
+  output$geneVizTab = renderUI(
+
+    tagList(tabpanel2render(
+      id = "idtab",
+      gene.symbol = sel_gene,
+      #title = c("summary", "tissue", "single_cell", "sub_cellular"),
+      title = c("summary", "tissue", "sub_cellular"),
+      content = list(
+        summary =  div(id = ns("gene_summary")),
+        tissue =  div(id = ns("tissue_exp")),
+        #single_cell = div(id = ns("sc_exp")),
+        sub_cellular = div(id = ns("subcel"))
+      )
+    )))
+
+  # Insert gene summary
+
+
+  insertUI(
+    selector = paste0("#", ns("gene_summary")),
+    where = "beforeEnd",
+    ui = div(br(),
+             viz
+    )
+  )
+
+
+  # Insert tissue expression
+  insertUI(
+    selector = paste0("#", ns("tissue_exp")),
+    where = "beforeEnd",
+    ui = div(br(),
+             bulk_violinplot
+             )
+  )
+
+
+  # insert image
+  insertUI(
+      selector = paste0("#", ns("subcel")),
+      where = "beforeEnd",
+      ui = div(mod_icc_if_image_viewer_ui("icc_if_image_viewer_1")
+      )
+    )
+
+
+
+
 
 }

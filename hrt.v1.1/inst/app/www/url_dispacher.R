@@ -18,7 +18,7 @@ get_url_parameters = function(){
 #' Check url and return the view
 #'
 #'
-#' @importFrom stringr
+#' @import stringr
 #'
 #'
 
@@ -35,13 +35,13 @@ url2template = function(fname, query, main_template_path = "template/", temp_var
   check_temp = file.exists(stringr::str_glue("template/{query['page']}.html"))
 
 
-  print(length(query))
+  #print(length(query))
 
-  print(paste0("queryurl is ", query["page"]))
+  #print(paste0("queryurl is ", query["page"]))
 
-  print(paste0("Check is ", check_temp))
+  #print(paste0("Check is ", check_temp))
 
-  str(query)
+  #str(query)
   print(stringr::str_glue("Query names are : {query_name}"))
 
   # Home page
@@ -73,6 +73,10 @@ url2template = function(fname, query, main_template_path = "template/", temp_var
 
     path_2_template = stringr::str_glue("{main_template_path}{query_name}.html")
 
+
+  } else if(length(query) == 2 & names(query)[[2]]=="tissue") {
+
+    path_2_template = stringr::str_glue("{main_template_path}error.html")
 
   } else {
     path_2_template = stringr::str_glue("{main_template_path}error.html")

@@ -31,10 +31,12 @@ mod_visualization_ui <- function(id){
   div(id=ns("ppitest"), style="padding:25px",
 
     uiOutput(ns("sel_viz")),
-    uiOutput(ns("viz")),
-    smDeviceBanner(message = "default"),
+    #uiOutput(ns("viz")),
+    #smDeviceBanner(message = "default"),
    # girafeOutput(ns("bulk_plot")),
-    plotlyOutput(ns("bulk_violinplot"))
+
+   uiOutput(ns("geneVizTab"))
+
   )
 }
 
@@ -66,6 +68,14 @@ mod_visualization_server <- function(id){
     expression in different tissues/cells"
     )
 
+
+    #if(is.na(isolate(img_url))){
+
+     # tags$script(
+     #   'document.getElementById("sub_cellular-tab").classList.add("disabled")'
+     # )
+    #}
+
 # Render visualization page
 
 
@@ -77,6 +87,7 @@ mod_visualization_server <- function(id){
 
     sel_gene = NULL
     makeReactiveBinding("sel_gene")#selected gene
+
 
     ## Conditional to render the main visualization page
 
@@ -108,10 +119,12 @@ mod_visualization_server <- function(id){
           input = input
         )
 
+
+
       }) #End of main Visualization page
 
     } else if (length(query) == 2) {#From here gene specific page will be rendered
-      #sel_gene = query[["gene"]]
+      sel_gene = query[["gene"]]
 
       top_ref = 10
 
@@ -159,7 +172,7 @@ mod_visualization_server <- function(id){
           str_glue("?page=human-housekeeping-gene/visualization&gene={input$viz_selectize}"),
           mode = "replace"
         )
-
+#Function to render the visualization page
         pageview = viz.helper(
           sel_gene = sel_gene,
           top_ref = top_ref,
@@ -174,12 +187,19 @@ mod_visualization_server <- function(id){
 
     }
 
-
-
-
     isolate(pageview)
 
+
+    return(
+      list(gene = reactive({
+      input$viz_selectize
+    })
+    ))
+
+
   })
+
+
 }
 
 ## To be copied in the UI

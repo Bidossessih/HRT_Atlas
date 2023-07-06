@@ -94,15 +94,16 @@ get_gene_info = function(spec, gene, top = 10){
 #get gene info
   geneI = tbl(con, "HK_gene_transcript_info") %>%
     filter(specie == spec, gene_name == gene) %>%
-    select(gene_name, Name, Summary, Ortholog_symbol, Synonym) %>% collect()
+    select(gene_name, Name, Summary, Ortholog_symbol, Synonym, ens_transcript_id)# %>% collect()
   #Get transcript info to enable filtering based on the number of tissue in which
   #the transcripts have been identified as relevant reference transcript
 
   cellI = tbl(con, "Tissue_Info_ref_transcripts_qpcr") %>%
     filter(specie == spec, gene_name == gene) %>%
-    select(cell_type, ens_transcript_id, gene_name, mean, rank) %>% collect()
+    select(cell_type, ens_transcript_id, mean, rank) #%>% collect()
+
   #merge information
-  dplyr::left_join(x = geneI, y = cellI, by = "gene_name") %>%
+  dplyr::left_join(x = geneI, y = cellI, by = "ens_transcript_id") %>%
     collect() -> gene_info
 
 
@@ -160,7 +161,7 @@ get_gene_info = function(spec, gene, top = 10){
 
 #gene_info = get_gene_info(spec="Human", gene="EEF2", top=10)
 
-
+#gene_info = get_gene_info(spec="Human", gene="AARS", top=10)
 
 
 get_tissue = function(ens_id){
@@ -177,10 +178,38 @@ get_tissue = function(ens_id){
 }
 
 
+#' Function to retrieve ICC image
+#'
+#' @importFrom dplyr %>% filter pull tbl collect
+#' @import DBI RSQLite
+
+gene2iccImg = function(gene){
+
+  con <- dbConnect(RSQLite::SQLite(), db_path)
+
+  if(!is.null(gene)){
+    print("Gene from fun")
+    print(gene)
+
+    tbl(con, "HPA_image") %>%
+      filter(gene_name == gene) %>%
+      select(gene_name, cell, imageUrl) %>% collect() %>% unique() -> imgData
+  }else{
+    imgData = NULL
+  }
+
+
+
+  dbDisconnect(con)
+
+  return(imgData)
+}
+
+#gene = "EEF2"
 #' Load expression data of specific transcript
 #'
 #' @param ens_l vector of Ensembl transcript id
-#'
+
 
 loadDataTrans <- function(ens_l) {
   #transform the vector ens_l in string suitable for inclusion in the SQL statement

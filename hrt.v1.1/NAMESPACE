@@ -2,6 +2,7 @@
 
 export(display_selectize)
 export(run_app)
+import(DBI)
 import(RSQLite)
 import(bslib)
 import(ggiraph)

@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## debug Visualization page
+## debug Visualization page (DONE)
 Some ENS transcript information are broken. Examples: AARS and ADH5.
   - NA appears in ENS ID column
   - the violin plot doesn't appear
