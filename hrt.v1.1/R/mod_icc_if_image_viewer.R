@@ -20,15 +20,16 @@ mod_icc_if_image_viewer_ui <- function(id){
               #blue_red_green_yellow
               inputId = ns("Id056"),
               label = "Toggle channels",
-              choices = c("Nucleus", "Microtubules", "Target protein", "ER"),
+              choices = c("Target protein", "Nucleus", "Microtubules", "ER"),
               direction = "vertical",
-              selected = c("Nucleus", "Target protein"),
+              selected = c("Target protein", "Nucleus"),
               size = "lg",
               #justified = TRUE,
               #individual = TRUE
             )
+
             ),
-        div(id = ns("icc_img_id"), content = "icc_container", class = "col-10", style = "background: black",
+        div(id = ns("icc_img_id"), class = "col-10", style = "background: black",
 
             uiOutput(ns("main_img"))
             )
@@ -126,7 +127,8 @@ mod_icc_if_image_viewer_server <- function(id, icc_data){
       #clean string
       #col = gsub("_{1}$", "", col)
 
-      col = str_c(input$Id056, collapse = "_") %>%
+      col = na.omit(input$Id056[order(ordered(input$Id056, levels = c("Nucleus", "Microtubules", "Target protein", "ER")))]) %>%
+        str_c(., collapse = "_") %>%
         str_replace(., "Nucleus", "blue") %>%
         str_replace(., "Microtubules", "red") %>%
         str_replace(., "Target protein", "green") %>%
@@ -140,29 +142,9 @@ mod_icc_if_image_viewer_server <- function(id, icc_data){
       # define color based on input$Id056 value
       icc_image$imageUrl = str_replace(icc_image$imageUrl, "blue_red_green", col)
 
-
-      shinyjs::onclick("Id056", shinyjs::html("time", date()))
-      ### Return button color
-
-      observe({
-        if ("ER" %in% input$Id056) {
-          shinyjs::inlineCSS(
-            'input[value="ER"] + label {
-              background-color: #ffc107 !important;
-            }'
-          )
-        }
-      })
-
-
-      observeEvent(input$Id056, {
-        updateCheckboxGroupButtons(
-          session = session,
-          inputId = "Id056",
-          selected = input$Id056
-        )
-      }, ignoreNULL = TRUE, ignoreInit = TRUE)
-
+      if(col == ""){
+        icc_image$imageUrl = ""
+      }
 
       return(list(
         button_color = list(

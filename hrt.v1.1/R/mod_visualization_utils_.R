@@ -156,6 +156,11 @@ icc_viewer = function(icc_data){
 
 
     if(i==1){
+
+      if(icc_data$imageUrl[i] == ""){
+        icc_data$cell[i] = ""
+      }
+
       tabpanelrender0 = HTML(
         str_glue(
           '
@@ -176,7 +181,7 @@ icc_viewer = function(icc_data){
         '
         <div class="tab-pane fade show active icc-main-img" id="icc_{i}" role="tabpanel" aria-labelledby="icc_{i}-tab">
           <a href = "{icc_data$imageUrl[i]}" target = "_blank">
-            <img src="{icc_data$imageUrl[i]}" class="img-fluid" alt="ICC image">
+            <img src="{icc_data$imageUrl[i]}" class="img-fluid" alt="">
           </a>
         </div>
         '
@@ -197,10 +202,11 @@ icc_viewer = function(icc_data){
           <li class="nav-item" role="presentation">
             <button class="nav-link icc-tab-button" id="icc_{i}-tab"
             data-bs-target="#icc_{i}" type="button" role="tab" aria-controls=icc_{i}
-            data-bs-toggle="tab" data-bs-html="true" title="<em>{icc_data$cell[i]}</em>"
+            data-bs-toggle="tab" data-bs-html="true" title="{icc_data$cell[i]}"
             aria-selected="true">
              <img src="{icc_data$imageUrl[i]}" alt="{icc_data$cell[i]}"  class = "icc-tab-img">
             </button></li>
+
           '
         )
       )
@@ -211,7 +217,7 @@ icc_viewer = function(icc_data){
         '
         <div class="tab-pane fade show icc-main-img" id="icc_{i}" role="tabpanel" aria-labelledby="icc_{i}-tab">
           <a href = "{icc_data$imageUrl[i]}" target = "_blank">
-            <img src="{icc_data$imageUrl[i]}" class="img-fluid" alt="ICC image">
+            <img src="{icc_data$imageUrl[i]}" class="img-fluid" alt="">
           </a>
         </div>
         '
@@ -237,7 +243,13 @@ icc_viewer = function(icc_data){
   tags$div(class = "tab-content",
            id = "icc_Content",
 
-           HTML(str_c(tabcontent, collapse = "\t"))
+           HTML(str_c(tabcontent, collapse = "\t")),
+           tags$span(
+             "Source:",
+             a("Human Protein Atlas", href = "https://www.proteinatlas.org/",
+               target = "_blank", style = "color: white; text-decoration: none;"),
+             style = "color: white"
+           )
   )
   )
 }

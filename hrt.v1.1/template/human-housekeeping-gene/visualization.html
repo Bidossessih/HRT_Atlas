@@ -159,6 +159,49 @@
 
   </div>
   
+  <script>
+
+    $(document).ready(function () {
+        $("input").click(function () {
+            var elts = ["Nucleus", "Microtubules", "Target protein", "ER"]
+            var myitem = $(this).attr("value") 
+
+            console.log("Item: ", myitem)
+
+            if(elts.includes(myitem)) {
+
+                var checkState = $(this).attr("checked")
+
+                if(checkState == "checked"){
+
+                    $(this).removeAttr("checked");
+                    
+
+                } else {
+                    $(this).attr("checked", "checked")
+                }            
+        
+
+            }
+
+            $('input').each(function () {
+                var checkAll = [];
+                checkAll.push($(this).attr('checked'));
+                var ch = checkAll.includes("checked");
+                
+                console.log("checked: ", ch)
+
+                /*if(!ch) {
+                    alert("Not checked")
+                }*/
+                
+            });
+            
+        });
+
+      
+        
+    });
   </script>
 
 </body>

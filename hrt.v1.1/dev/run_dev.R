@@ -1,6 +1,7 @@
 # Set options here
-#setwd("/mnt/d/Repository_ubuntu/Housekeeping/HRT_Atlas/hrt.v1.1")
+setwd("/mnt/d/Repository_ubuntu/Housekeeping/HRT_Atlas/hrt.v1.1")
 options(golem.app.prod = FALSE) # TRUE = production mode, FALSE = development mode
+options(shiny.autoreload = TRUE)
 
 # Comment this if you don't want the app to be served on a random port
 #options(shiny.port = httpuv::randomPort())
@@ -17,5 +18,6 @@ opt = list(
   host = "0.0.0.0",
   port = 1985
 )
+
 
 run_app(options = opt)

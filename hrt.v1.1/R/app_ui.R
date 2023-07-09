@@ -9,8 +9,8 @@
 app_ui <- function(request) {
   #Use bootstrap 5
   fluidPage(useShinyjs(),
-            uiOutput("ui_dispached"), theme = bs_theme(version = 5))
-
+            uiOutput("ui_dispached"), theme = bs_theme(version = 5)
+  )
 
 }
 
@@ -36,13 +36,14 @@ golem_add_external_resources <- function(){
     bundle_resources(
       path = app_sys('app/www'),
       app_title = 'Housekeeping and Reference Transcript Atlas',
-      #all_files = FALSE
+      all_files = TRUE
     ),
     # Add here other external resources
     # for example, you can add shinyalert::useShinyalert()
     tags$head(
 
       HTML('
+
 
            ')
 

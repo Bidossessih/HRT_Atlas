@@ -9,8 +9,7 @@
 
   <link rel="shortcut icon" type="image/x-icon" href="www/images/LogoHK220X150.png" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" type="text/css" href="www/hrt.css" />
-
+  
   <title>Human cell selective reference genes</title>
   <meta name="Description"
     content="Most stable human tissue selective housekeeping genes and primers to normalize qPCR expression." />
@@ -96,9 +95,10 @@
               <br>
               in different tissues</a>
             <a class="dropdown-item" href="?page=mouse-housekeeping-gene/visualization" style="text-align:justify"
-              onclick="ga('send', 'event', 'Menu', 'access', 'Visualize Mouse');">Mouse housekeeping genes expression
+              >Mouse housekeeping genes expression
               <br>
-              in different tissues</a>
+              in different tissues
+            </a>
 
           </div>
         </li>
@@ -299,6 +299,39 @@
   
   <br>
   <br>
+
+
+  <script>
+    function disabledSearch() {
+
+      if($("#search").val() == "") {
+          $("#buttonresult").addClass("disabled")
+
+      } 
+
+      if($("#search").val() != "") {
+          $("#buttonresult").removeClass("disabled")
+      }
+
+    };
+
+    document.getElementById("search").addEventListener("change", disabledSearch);
+
+
+    function openResult() {
+
+      var cell = $("#search").val().replaceAll(" ", "-")
+
+      var specie = window.location.search.replace("?", "")
+      window.location.href="/?page=".concat(specie).concat("-housekeeping-gene&tissue=").concat(cell);
+    }
+
+
+    document.getElementById("buttonresult").addEventListener("click", openResult);
+
+
+
+  </script>
 
 
   <!--Show dropdown menu on hover-->

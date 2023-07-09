@@ -27,6 +27,7 @@ get_url_parameters = function(){
 
 url2template = function(fname, query, main_template_path = "template/", temp_var = NULL) {
 
+
   #url_list = gsub(".html", "", list.files("template/")) # get list of html files
 
   query_name = names(query)
@@ -60,6 +61,9 @@ url2template = function(fname, query, main_template_path = "template/", temp_var
 
     query_name = query_name[[1]]
 
+    print("Montre moi ça....")
+
+    print(query_name)
 
     path_2_template = stringr::str_glue("{main_template_path}{query_name}.html")
 
