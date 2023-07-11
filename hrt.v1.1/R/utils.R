@@ -224,8 +224,36 @@ loadDataTrans <- function(ens_l) {
   data
 }
 
-#' Accordion
+#' channelç button
 #'
 #'
 #'
 
+channel.button = function(id){
+  #choices = c("Target protein", "Nucleus", "Microtubules", "ER"),
+  #direction = "vertical",
+  #selected = c("Target protein", "Nucleus"),
+  HTML(
+    str_glue(
+      '
+    <div class="form-group shiny-input-container shiny-input-checkboxgroup shiny-input-container-inline shinyjs-resettable"
+      data-shinyjs-resettable-type="CheckboxGroup" data-shinyjs-resettable-value="[&quot;Target protein&quot;,&quot;Nucleus&quot;]">
+            <label id="{id}-label" class="control-label" for="{id}">Toggle channels</label>
+            <br>
+    <div id="{id}" class="checkbox-group-buttons shiny-bound-input">
+            <div aria-labelledby="{id}-label" class="btn-group-vertical btn-group-container-sw" data-toggle="buttons" role="group">
+              <input type="checkbox" onclick="changeButtonColor(val = this.value, id = this.id)" autocomplete="off" id="{id}1" name="{id}" value="Target protein" class="btn-check shiny-bound-input" checked="checked">
+              <label class="btn checkbtn btn-channel-button" for="{id}1">Target protein</label>
+              <input type="checkbox" onclick="changeButtonColor(val = this.value, id = this.id)" autocomplete="off" id="{id}2" name="{id}" value="Nucleus" class="btn-check shiny-bound-input" checked="checked">
+              <label class="btn checkbtn btn-channel-button" for="{id}2">Nucleus</label>
+              <input type="checkbox" onclick="changeButtonColor(val = this.value, id = this.id)" autocomplete="off" id="{id}3" name="{id}" value="Microtubules" class="btn-check shiny-bound-input">
+              <label class="btn checkbtn btn-channel-button" for="{id}3">Microtubules</label>
+              <input type="checkbox" onclick="changeButtonColor(val = this.value, id = this.id)" autocomplete="off" id="{id}4" name="{id}" value="ER" class="btn-check shiny-bound-input">
+              <label class="btn checkbtn btn-channel-button" for="{id}4">ER</label>
+            </div>
+          </div>
+          </div>
+    '
+    )
+  )
+}

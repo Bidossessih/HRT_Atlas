@@ -45,8 +45,9 @@ url2template = function(fname, query, main_template_path = "template/", temp_var
   #str(query)
   print(stringr::str_glue("Query names are : {query_name}"))
 
+
   # Home page
-  if(nchar(fname) == 0 || query_name == "homePageGlobal") {
+  if(nchar(fname) == 0 || query_name[1] == "homePageGlobal") {
 
     path_2_template = stringr::str_glue("{main_template_path}index.html")
 
@@ -61,15 +62,13 @@ url2template = function(fname, query, main_template_path = "template/", temp_var
 
     query_name = query_name[[1]]
 
-    print("Montre moi ça....")
-
-    print(query_name)
 
     path_2_template = stringr::str_glue("{main_template_path}{query_name}.html")
 
     #if(query_name[[1]] == "human-housekeeping-gene/visualization"){
     #  temp_var = mod_visualization_ui("visualization_1")
     #}
+
 
   } else if(length(query) == 2 & names(query)[[2]]=="gene"){
 
@@ -78,9 +77,11 @@ url2template = function(fname, query, main_template_path = "template/", temp_var
     path_2_template = stringr::str_glue("{main_template_path}{query_name}.html")
 
 
-  } else if(length(query) == 2 & names(query)[[2]]=="tissue") {
+  } else if(length(query) == 2 & names(query)[[2]]=="result") {
 
-    path_2_template = stringr::str_glue("{main_template_path}error.html")
+    query_name = query[[2]]
+
+    path_2_template = stringr::str_glue("{main_template_path}{query_name}.html")
 
   } else {
     path_2_template = stringr::str_glue("{main_template_path}error.html")

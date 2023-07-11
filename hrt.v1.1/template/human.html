@@ -256,7 +256,7 @@
                 </div>
               </div>
               <div class="col-sm-3 col-md-4">
-                <button class="btn btn-default action-button btn btn-default action-button searchdiv" id="buttonresult"
+                <button class="btn btn-default action-button btn btn-default action-button searchdiv disabled" id="buttonresult"
                   style="width: auto; font-size: medium !important;" type="button"
                   onclick="ga('send', 'event', 'Button', 'access', 'Search Human Reference');">
                   <i class="fa fa-search-solid"></i>
@@ -301,39 +301,7 @@
   <br>
 
 
-  <script>
-    function disabledSearch() {
-
-      if($("#search").val() == "") {
-          $("#buttonresult").addClass("disabled")
-
-      } 
-
-      if($("#search").val() != "") {
-          $("#buttonresult").removeClass("disabled")
-      }
-
-    };
-
-    document.getElementById("search").addEventListener("change", disabledSearch);
-
-
-    function openResult() {
-
-      var cell = $("#search").val().replaceAll(" ", "-")
-
-      var specie = window.location.search.replace("?", "")
-      window.location.href="/?page=".concat(specie).concat("-housekeeping-gene&tissue=").concat(cell);
-    }
-
-
-    document.getElementById("buttonresult").addEventListener("click", openResult);
-
-
-
-  </script>
-
-
+  
   <!--Show dropdown menu on hover-->
   <script>
     $('ul.nav li.dropdown').hover(function () {

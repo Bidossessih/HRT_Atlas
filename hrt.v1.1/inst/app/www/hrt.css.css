@@ -704,6 +704,7 @@ svg {
 
 input[value="Microtubules"][checked="checked"] + label {
   background-color: #dc3545 !important;
+  
 }
 
 
@@ -720,6 +721,11 @@ input[value="Nucleus"][checked="checked"] + label {
   background-color: #0d6efd !important;
 }
 
+input[value="Microtubules"] + label, input[value="Nucleus"] + label, input[value="ER"] + label, input[value="Target protein"] + label {
+  border: 1px solid rgb(129, 128, 128) !important;
+  
+}
+
 
 .btn-check:checked + .btn-outline-primary, .btn-check:active + .btn-outline-primary, .btn-outline-primary:active, .btn-outline-primary.active, .btn-outline-primary.dropdown-toggle.show, .dropdown-toggle.in {
   border-color: transparent !important;
@@ -729,3 +735,4 @@ input[value="Nucleus"][checked="checked"] + label {
 .btn-check:focus + .btn-outline-primary, .btn-outline-primary:focus {
   box-shadow: transparent !important;
 }
+

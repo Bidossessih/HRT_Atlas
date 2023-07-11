@@ -152,6 +152,8 @@ icc_viewer = function(icc_data){
 
   tabcontent = c()
 
+  print(str(icc_data))
+
   for (i in 1:nrow(icc_data)) {
 
 

@@ -16,17 +16,19 @@ mod_icc_if_image_viewer_ui <- function(id){
 
             #textOutput(ns("res")),
 
-            checkboxGroupButtons(
+            div(style = "display:none", checkboxGroupButtons(
               #blue_red_green_yellow
-              inputId = ns("Id056"),
+              inputId = ns("Id056_2"),
               label = "Toggle channels",
               choices = c("Target protein", "Nucleus", "Microtubules", "ER"),
               direction = "vertical",
               selected = c("Target protein", "Nucleus"),
-              size = "lg",
+              size = "normal",
+              status = "channel-button",
               #justified = TRUE,
               #individual = TRUE
-            )
+            )),
+            channel.button(id=ns("Id056"))
 
             ),
         div(id = ns("icc_img_id"), class = "col-10", style = "background: black",
@@ -135,9 +137,9 @@ mod_icc_if_image_viewer_server <- function(id, icc_data){
         str_replace(., "ER", "yellow")
 
 
-      print("Col")
-      print(input$Id056)
-      print(col)
+      #print("Col")
+      #print(input$Id056)
+      #print(col)
 
       # define color based on input$Id056 value
       icc_image$imageUrl = str_replace(icc_image$imageUrl, "blue_red_green", col)

@@ -54,10 +54,6 @@ mod_visualization_server <- function(id){
       str_remove("-housekeeping-gene/visualization.*$") %>%
       str_to_sentence() -> specie
 
-    print("Vas y")
-
-    print(query[1])
-
 
 # Selectize information
 
